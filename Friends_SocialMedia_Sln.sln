@@ -5,6 +5,8 @@ VisualStudioVersion = 17.13.35919.96
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Friends_SocialMedia_UI", "Friends_SocialMedia_UI\Friends_SocialMedia_UI.csproj", "{C780C954-7891-44D6-A3CD-F0D8476B2530}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Friends_App_Data", "Friends_App_Data\Friends_App_Data.csproj", "{F33EB6A7-57AD-4789-BF50-D05B611462F7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{C780C954-7891-44D6-A3CD-F0D8476B2530}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C780C954-7891-44D6-A3CD-F0D8476B2530}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C780C954-7891-44D6-A3CD-F0D8476B2530}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F33EB6A7-57AD-4789-BF50-D05B611462F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F33EB6A7-57AD-4789-BF50-D05B611462F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F33EB6A7-57AD-4789-BF50-D05B611462F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F33EB6A7-57AD-4789-BF50-D05B611462F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

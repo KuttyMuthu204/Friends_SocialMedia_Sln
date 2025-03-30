@@ -1,5 +1,3 @@
-using System.Diagnostics;
-using Friends_SocialMedia_UI.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Friends_SocialMedia_UI.Controllers

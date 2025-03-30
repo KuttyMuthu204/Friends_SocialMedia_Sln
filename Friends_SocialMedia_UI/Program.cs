@@ -1,7 +1,14 @@
+using Friends_App_Data.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+//DB Connection
+var dbConnection = builder.Configuration.GetConnectionString("FriendsConnection");
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(dbConnection));
 
 var app = builder.Build();
 
