@@ -1,5 +1,21 @@
 ﻿@model Post
 
+@{
+	TimeSpan timeSpanSincePosted = DateTime.UtcNow.Subtract(Model.DateCreated);
+
+	string displayName = "";
+	if (timeSpanSincePosted.TotalDays > 365)
+		displayName = $"{timeSpanSincePosted.Days/365}y ago";
+	else if (timeSpanSincePosted.TotalDays >= 1)
+		displayName = $"{timeSpanSincePosted.Days}d ago";
+	else if (timeSpanSincePosted.TotalHours >= 1)
+		displayName = $"{timeSpanSincePosted.Days}h ago";
+	else if (timeSpanSincePosted.TotalMinutes >= 1)
+		displayName = $"{timeSpanSincePosted.Minutes}m ago";
+    else
+		displayName = "Just now";
+}
+
 <div class="bg-white rounded-xl shadow-sm text-sm font-medium border1">
 	@* Post heading *@
 	<div class="flex gap-3 sm:p-4 p-2.5 text-sm font-medium">
@@ -9,7 +25,7 @@
 		<div class="flex-1">
 			<a>
 				<div class="text-black">@Model.User.FullName</div>
-				<div class="text-xs text-gray-500/80">@Model.DateCreated?.ToString("MM/dd/yyyy HH:mm")</div>
+				<div class="text-xs text-gray-500/80" title="@Model.DateCreated.ToString("MM/dd/yyyy HH:mm")">@displayName</div>
 			</a>
 		</div>
 		<div class="-mr-1">

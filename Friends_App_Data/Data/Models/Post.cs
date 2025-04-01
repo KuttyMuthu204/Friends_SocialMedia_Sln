@@ -9,8 +9,8 @@ namespace Friends_App_Data.Data.Models
         public string? Content { get; set; }
         public string? ImageUrl { get; set; }
         public int NoOfReports { get; set; }
-        public DateTime? DateCreated { get; set; }
-        public DateTime? DateUpdated { get; set; }
+        public DateTime DateCreated { get; set; }
+        public DateTime DateUpdated { get; set; }
 
         //Foreign key
         public int UserId { get; set; }
