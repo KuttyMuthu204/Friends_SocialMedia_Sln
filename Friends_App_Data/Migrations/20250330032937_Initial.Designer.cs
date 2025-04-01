@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Friends_SocialMedia_UI.Migrations
+namespace Friends_App_Data.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20250330032937_Initial")]

@@ -1,4 +1,5 @@
 using Friends_App_Data.Data;
+using Friends_App_Data.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,14 @@ var dbConnection = builder.Configuration.GetConnectionString("FriendsConnection"
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(dbConnection));
 
 var app = builder.Build();
+
+//Seed the databse with Initial Data
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await dbContext.Database.MigrateAsync();
+    await DbInitializer.SeedAsync(dbContext);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -29,6 +38,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=GetAllPostsAsyncs}/{id?}");
 
 app.Run();

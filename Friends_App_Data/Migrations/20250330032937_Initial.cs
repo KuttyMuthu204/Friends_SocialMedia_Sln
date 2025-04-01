@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 
-namespace Friends_SocialMedia_UI.Migrations
+namespace Friends_App_Data.Data.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration
