@@ -5,14 +5,14 @@
 
 	string displayName = "";
 	if (timeSpanSincePosted.TotalDays > 365)
-		displayName = $"{timeSpanSincePosted.Days/365}y ago";
+		displayName = $"{(int)timeSpanSincePosted.Days / 365}y ago";
 	else if (timeSpanSincePosted.TotalDays >= 1)
-		displayName = $"{timeSpanSincePosted.Days}d ago";
+		displayName = $"{(int)timeSpanSincePosted.Days}d ago";
 	else if (timeSpanSincePosted.TotalHours >= 1)
-		displayName = $"{timeSpanSincePosted.Days}h ago";
+		displayName = $"{(int)timeSpanSincePosted.TotalHours}h ago";
 	else if (timeSpanSincePosted.TotalMinutes >= 1)
-		displayName = $"{timeSpanSincePosted.Minutes}m ago";
-    else
+		displayName = $"{(int)timeSpanSincePosted.Minutes}m ago";
+	else
 		displayName = "Just now";
 }
 
@@ -73,16 +73,26 @@
 	@* Icons *@
 	<div class="sm:p-4 p-2.5 flex items-center gap-4 text-xs font-semibold">
 		<div class="flex items-center gap-2.5">
-			<a class="button-icon text-red-500">
-				<img src="~/images/icons/heart.png" class="text-lg w-6 h-6" />
-			</a>
-			<a href="#">24</a>
+			<form asp-asp-controller="Home" asp-action="TogglePostLike" method="post">
+				<input type="hidden" name="postId" value="@Model.Id" />
+				<button type="submit" class="button-icon">
+					@if (Model.Likes.Any(n => n.UserId == 1))
+					{
+						<img src="~/images/icons/heart_red.png" class="text-lg w-6 h-6" title="like" />
+					}
+					else
+					{
+						<img src="~/images/icons/heart.png" class="text-lg w-6 h-6" title="like" />
+					}
+				</button>
+			</form>
+			<a href="#">@Model.Likes.Count</a>
 		</div>
 		<div class="flex items-center gap-3">
 			<a class="button-icon">
 				<img src="~/images/icons/conversation.png" class="text-lg w-6 h-6" />
 			</a>
-			<a href="#">5</a>
+			<a href="#">@Model.Comments.Count</a>
 		</div>
 		<div class="ml-auto"></div>
 		<div>
@@ -94,12 +104,57 @@
 
 	@* Add comment section *@
 	<div>
-		<div class="sm:px-4 sm:py-3 p-2.5 border-t border-gray-100 flex items-center gap-1">
-			<img src="~/images/avatar/user.png" class="w-6 h-6 rounded-full" />
-			<div class="flex-1 relative overflow-hidden h-10">
-				<textarea placeholder="Add Comment...." rows="1" class="w-full resize-none !bg-transparent px-4 py-2 focus:!border-transparent focus:!ring-transparent"></textarea>
-			</div>
-			<button class="text-sm rounded-full py-1.5 px-3.5 bg-secondery">Comment</button>
+		<div class="p-2.5 border-t border-gray-100 font-normal space-y-3 relative">
+			@foreach (var comment in Model.Comments.OrderByDescending(n => n.DateCreated).Take(3))
+			{
+				TimeSpan timeSpanSinceCommented = DateTime.UtcNow.Subtract(comment.DateCreated);
+
+				string displayTime = "";
+				if (timeSpanSinceCommented.TotalDays > 365)
+					displayTime = $"{(int)timeSpanSinceCommented.Days / 365}y ago";
+				else if (timeSpanSinceCommented.TotalDays >= 1)
+					displayTime = $"{(int)timeSpanSinceCommented.Days}d ago";
+				else if (timeSpanSinceCommented.TotalHours >= 1)
+					displayTime = $"{(int)timeSpanSinceCommented.TotalHours}h ago";
+				else if (timeSpanSinceCommented.TotalMinutes >= 1)
+					displayTime = $"{(int)timeSpanSinceCommented.Minutes}m ago";
+				else
+					displayTime = "Just now";
+
+				<div class="flex items-start gap-3 relative">
+					<a>
+						<img src="@(comment.User.ProfilePictureUrl ?? "~/images/avatar/user.png") class="w-9 h-9 rounded-full" />
+					</a>
+					<div class="flex-1">
+						<div class="flex justify-content-between">
+							<a class="text-black font-medium inline-block flex-grow">
+								@comment.User.FullName
+							</a>
+							<small>@displayTime</small>
+						</div>
+						<p class="mt-0.5">
+							@comment.Content
+						</p>
+					</div>
+				</div>
+			}
+
+			@if (Model.Comments.Count >= 3)
+			{
+				<div class="p-1.5">
+					<a>Show all comments</a>
+				</div>
+			}
 		</div>
+		<form asp-controller="Home" asp-action="AddPostComment" method="post">
+			<div class="sm:px-4 sm:py-3 p-2.5 border-t border-gray-100 flex items-center gap-1">
+				<img src="~/images/avatar/user.png" class="w-6 h-6 rounded-full" />
+				<input type="hidden" name="postId" value="@Model.Id" />
+				<div class="flex-1 relative overflow-hidden h-10">
+					<textarea name="content" placeholder="Add Comment...." rows="1" class="w-full resize-none bg-black-10 px-4 py-2 border border-gray-300" style="border-radius:5px"></textarea>
+				</div>
+				<button type="submit" class="text-sm rounded-full py-1.5 px-3.5 bg-secondary">Comment</button>
+			</div>
+		</form>
 	</div>
 </div>
