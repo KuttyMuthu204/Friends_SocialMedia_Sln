@@ -132,9 +132,18 @@
 							</a>
 							<small>@displayTime</small>
 						</div>
-						<p class="mt-0.5">
-							@comment.Content
-						</p>
+						<div class="flex items-center justify-between">
+							<p class="mt-0.5">
+								@comment.Content
+							</p>
+
+							<form asp-asp-controller="Home" asp-action="RemovePostComment">
+								<input type="hidden" name="commentId" value="@comment.Id" />
+								<button type="submit" class="text-xs ml-2" title="Remove post comment">
+									<img src="~/images/icons/delete.png" class="w-5 h-5" />
+								</button>
+							</form>
+						</div>
 					</div>
 				</div>
 			}
