@@ -14,6 +14,8 @@ namespace Friends_App_Data.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Like> Likes { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<Favorite> Favorites { get; set; }
+        public DbSet<Report> Reports { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -49,6 +51,38 @@ namespace Friends_App_Data.Data
               .WithMany(p => p.Comments)
               .HasForeignKey(l => l.UserId)
               .OnDelete(DeleteBehavior.Restrict);
+
+            //Favorites
+            modelBuilder.Entity<Favorite>()
+              .HasKey(l => new { l.PostId, l.UserId });
+
+            modelBuilder.Entity<Favorite>()
+                .HasOne(l => l.Post)
+                .WithMany(p => p.Favorites)
+                .HasForeignKey(l => l.PostId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Favorite>()
+               .HasOne(l => l.User)
+               .WithMany(p => p.Favorites)
+               .HasForeignKey(l => l.UserId)
+               .OnDelete(DeleteBehavior.Restrict);
+
+            //Reports
+            modelBuilder.Entity<Report>()
+                .HasKey(l => new { l.PostId, l.UserId });
+
+            modelBuilder.Entity<Report>()
+                .HasOne(l => l.Post)
+                .WithMany(p => p.Reports)
+                .HasForeignKey(l => l.PostId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Report>()
+               .HasOne(l => l.User)
+               .WithMany(p => p.Reports)
+               .HasForeignKey(l => l.UserId)
+               .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(modelBuilder);
         }

@@ -4,6 +4,7 @@ using Friends_App_Data.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Friends_App_Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250405092648_Added_Post_Fav")]
+    partial class Added_Post_Fav
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -113,12 +116,6 @@ namespace Friends_App_Data.Migrations
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPrivate")
-                        .HasColumnType("bit");
-
                     b.Property<int>("NoOfReports")
                         .HasColumnType("int");
 
@@ -132,27 +129,6 @@ namespace Friends_App_Data.Migrations
                     b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("Friends_App_Data.Data.Models.Report", b =>
-                {
-                    b.Property<int>("PostId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.HasKey("PostId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Reports");
-                });
-
             modelBuilder.Entity("Friends_App_Data.Data.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -164,9 +140,6 @@ namespace Friends_App_Data.Migrations
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
 
                     b.Property<string>("ProfilePictureUrl")
                         .HasColumnType("nvarchar(max)");
@@ -244,25 +217,6 @@ namespace Friends_App_Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Friends_App_Data.Data.Models.Report", b =>
-                {
-                    b.HasOne("Friends_App_Data.Data.Models.Post", "Post")
-                        .WithMany("Reports")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("Friends_App_Data.Data.Models.User", "User")
-                        .WithMany("Reports")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Post");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Friends_App_Data.Data.Models.Post", b =>
                 {
                     b.Navigation("Comments");
@@ -270,8 +224,6 @@ namespace Friends_App_Data.Migrations
                     b.Navigation("Favorites");
 
                     b.Navigation("Likes");
-
-                    b.Navigation("Reports");
                 });
 
             modelBuilder.Entity("Friends_App_Data.Data.Models.User", b =>
@@ -283,8 +235,6 @@ namespace Friends_App_Data.Migrations
                     b.Navigation("Likes");
 
                     b.Navigation("Posts");
-
-                    b.Navigation("Reports");
                 });
 #pragma warning restore 612, 618
         }

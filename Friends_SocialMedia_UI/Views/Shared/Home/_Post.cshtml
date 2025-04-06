@@ -14,6 +14,11 @@
 		displayName = $"{(int)timeSpanSincePosted.Minutes}m ago";
 	else
 		displayName = "Just now";
+
+	bool isFavorited = Model.Favorites.Any(n => n.UserId == 1);
+	bool isLiked = Model.Likes.Any(n => n.UserId == 1);
+	bool isPrivate = Model.IsPrivate == true && Model.UserId == 1;
+	bool isReported = Model.Reports.Any(n => n.UserId == 1);
 }
 
 <div class="bg-white rounded-xl shadow-sm text-sm font-medium border1">
@@ -30,24 +35,37 @@
 		</div>
 		<div class="-mr-1">
 			<div class="forms-container" style="display: flex; gap: 10px; align-items: center;">
-				<form>
-					<input type="hidden" name="postId" />
-					<button type="submit" class="hover:!bg-red-50 icon-link">
-						<img src="~/images/icons/padlock.png" class="w-6 h-6" />
-					</button>
-				</form>
-				<form asp-controller="Home" asp-action="Delete">
-					<input type="hidden" name="postId" />
-					<button type="submit" class="text-red-400 hover:!bg-red-50 icon-link">
-						<img src="~/images/icons/recycle-bin.png" class="w-6 h-6" />
-					</button>
-				</form>
-				<form asp-controller="Home" asp-action="Report">
-					<input type="hidden" name="postId" />
-					<button type="submit" class="hover:!bg-red-50 icon-link">
-						<img src="~/images/icons/flag.png" class="w-6 h-6" />
-					</button>
-				</form>
+				@if (Model.UserId == 1)
+				{
+					<form asp-asp-controller="Home" asp-action="TogglePostVisibility" method="post">
+						<input type="hidden" name="postId" value="@Model.Id" />
+						<button type="submit" class="hover:!bg-red-50 icon-link">
+							@if (isPrivate)
+							{
+								<img src="~/images/icons/padlock.png" class="w-5 h-5" title="Set as public" />
+							}
+							else
+							{
+								<img src="~/images/icons/unlock.png" class="w-5 h-5" title="Set as private" />
+							}
+						</button>
+					</form>
+
+					<form>
+						<button type="button" onclick="openPostDeleteConfirmation(@Model.Id)" class="text-red-400 hover:!bg-red-50 icon-link">
+							<img src="~/images/icons/delete.png" class="w-5 h-5" title="Remove post" />
+						</button>
+					</form>
+				}
+				@if (!isReported)
+				{
+					<form asp-controller="Home" asp-action="AddPostReport">
+						<input type="hidden" name="postId" value="@Model.Id" />
+						<button type="submit" class="hover:!bg-red-50 icon-link">
+							<img src="~/images/icons/flag.png" class="w-5 h-5" title="Report post" />
+						</button>
+					</form>
+				}
 			</div>
 		</div>
 	</div>
@@ -76,13 +94,13 @@
 			<form asp-asp-controller="Home" asp-action="TogglePostLike" method="post">
 				<input type="hidden" name="postId" value="@Model.Id" />
 				<button type="submit" class="button-icon">
-					@if (Model.Likes.Any(n => n.UserId == 1))
+					@if (isLiked)
 					{
-						<img src="~/images/icons/heart_red.png" class="text-lg w-6 h-6" title="like" />
+						<img src="~/images/icons/heart_red.png" class="text-lg w-5 h-5" title="like" />
 					}
 					else
 					{
-						<img src="~/images/icons/heart.png" class="text-lg w-6 h-6" title="like" />
+						<img src="~/images/icons/heart.png" class="text-lg w-5 h-5" title="like" />
 					}
 				</button>
 			</form>
@@ -90,15 +108,31 @@
 		</div>
 		<div class="flex items-center gap-3">
 			<a class="button-icon">
-				<img src="~/images/icons/conversation.png" class="text-lg w-6 h-6" />
+				<img src="~/images/icons/conversation.png" class="text-lg w-5 h-5" />
 			</a>
 			<a href="#">@Model.Comments.Count</a>
 		</div>
+
 		<div class="ml-auto"></div>
-		<div>
-			<a class="button-icon ml-auto">
-				<img src="~/images/icons/bookmark-white.png" class="text-lg w-6 h-6" />
-			</a>
+
+		<div class="flex items-center gap-2">
+			<form asp-controller="Home" asp-action="TogglePostFavorite" method="post">
+				<input type="hidden" name="postId" value="@Model.Id" />
+				<button type="submit" class="button-icon ml-auto">
+					@if (isFavorited)
+					{
+						<img src="~/images/icons/book-mark.png" class="text-lg w-5 h-5" title="favorite" />
+					}
+					else
+					{
+						<img src="~/images/icons/bookmark-white.png" class="text-lg w-5 h-5" title="favorite" />
+					}
+				</button>
+			</form>
+			@if (@Model.Favorites.Any())
+			{
+				<a href="#">@Model.Favorites.Count</a>
+			}
 		</div>
 	</div>
 

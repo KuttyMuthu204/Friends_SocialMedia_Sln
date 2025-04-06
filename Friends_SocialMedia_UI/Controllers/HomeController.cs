@@ -21,7 +21,19 @@ namespace Friends_SocialMedia_UI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllPostsAsyncs()
         {
-            return View("Index", await _context.Posts.Include(u => u.User).Include(n => n.Likes).Include(n => n.Comments).ThenInclude(n => n.User).OrderByDescending(o => o.DateCreated).ToListAsync());
+            int loggedInUserId = 1;
+
+            var posts = await _context.Posts
+                .Where(n => (!n.IsPrivate || n.UserId == loggedInUserId) && (n.Reports.Count < 5 && !n.IsDeleted))
+                .Include(u => u.User)
+                .Include(n => n.Likes)
+                .Include(f => f.Favorites)
+                .Include(n => n.Reports)
+                .Include(n => n.Comments)
+                .ThenInclude(n => n.User)
+                .OrderByDescending(o => o.DateCreated).ToListAsync();
+
+            return View("Index", posts);
         }
 
         [HttpPost]
@@ -127,6 +139,86 @@ namespace Friends_SocialMedia_UI.Controllers
             if (commentDb != null)
             {
                 _context.Comments.Remove(commentDb);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("GetAllPostsAsyncs");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> TogglePostFavorite(PostFavoriteVM postFavoriteVM)
+        {
+            int loggedInUser = 1;
+
+            //Chekc if the user has already liked the post
+            var favorites = await _context.Favorites.Where(l => l.PostId == postFavoriteVM.PostId && l.UserId == loggedInUser).FirstOrDefaultAsync();
+
+            if (favorites != null)
+            {
+                _context.Favorites.Remove(favorites);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                var newFavorite = new Favorite()
+                {
+                    PostId = postFavoriteVM.PostId,
+                    UserId = loggedInUser
+                };
+
+                await _context.Favorites.AddAsync(newFavorite);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("GetAllPostsAsyncs");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> TogglePostVisibility(PostVisibilityVM postVisibilityVM)
+        {
+            int loggedInUser = 1;
+
+            //Chekc post by id and the loggedin user
+            var post = await _context.Posts.Where(l => l.Id == postVisibilityVM.PostId && l.UserId == loggedInUser).FirstOrDefaultAsync();
+
+            if (post != null)
+            {
+                post.IsPrivate = !post.IsPrivate;
+                _context.Posts.Update(post);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("GetAllPostsAsyncs");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddPostReport(PostReportVM postReportVM)
+        {
+            int loggedInUser = 1;
+
+            //Create a new comment
+            var newReport = new Report()
+            {
+                UserId = loggedInUser,
+                PostId = postReportVM.PostId,
+                DateCreated = DateTime.UtcNow,
+            };
+
+            await _context.Reports.AddAsync(newReport);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("GetAllPostsAsyncs");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeletePost(PostDeleteVM postDeleteVM)
+        {
+            var postDb = await _context.Posts.FirstOrDefaultAsync(p => p.Id == postDeleteVM.PostId);
+
+            if (postDb != null)
+            {
+                postDb.IsDeleted = true;
+                _context.Posts.Update(postDb);
                 await _context.SaveChangesAsync();
             }
 
