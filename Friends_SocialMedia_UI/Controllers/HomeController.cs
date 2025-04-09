@@ -1,6 +1,5 @@
 using Friends_App_Data.Data;
 using Friends_App_Data.Data.Models;
-using Friends_App_Data.Migrations;
 using Friends_SocialMedia_UI.ViewModels.Home;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
