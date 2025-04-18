@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Friends_App_Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250409125833_Initial_Migration")]
-    partial class Initial_Migration
+    [Migration("20250418110103_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -156,6 +156,33 @@ namespace Friends_App_Data.Migrations
                     b.ToTable("Reports");
                 });
 
+            modelBuilder.Entity("Friends_App_Data.Data.Models.Story", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Stories");
+                });
+
             modelBuilder.Entity("Friends_App_Data.Data.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -266,6 +293,17 @@ namespace Friends_App_Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Friends_App_Data.Data.Models.Story", b =>
+                {
+                    b.HasOne("Friends_App_Data.Data.Models.User", "User")
+                        .WithMany("Stories")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Friends_App_Data.Data.Models.Post", b =>
                 {
                     b.Navigation("Comments");
@@ -288,6 +326,8 @@ namespace Friends_App_Data.Migrations
                     b.Navigation("Posts");
 
                     b.Navigation("Reports");
+
+                    b.Navigation("Stories");
                 });
 #pragma warning restore 612, 618
         }
