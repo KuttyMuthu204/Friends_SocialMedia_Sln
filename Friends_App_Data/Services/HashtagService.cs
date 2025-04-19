@@ -22,51 +22,57 @@ namespace Friends_App_Data.Services
 
         public async Task AddPostHashTagsAsync(string content)
         {
-            //find and store the hashtags
-            var postsHashtags = HastagHelper.GetHastags(content);
-
-            foreach (var postHashtag in postsHashtags)
+            if (!string.IsNullOrEmpty(content))
             {
-                var hashtagDb = await _context.Hastags.FirstOrDefaultAsync(n => n.Name == postHashtag);
+                //find and store the hashtags
+                var postsHashtags = HastagHelper.GetHastags(content);
 
-                if (hashtagDb != null)
+                foreach (var postHashtag in postsHashtags)
                 {
-                    hashtagDb.Count += 1;
-                    hashtagDb.DateUpdated = DateTime.UtcNow;
+                    var hashtagDb = await _context.Hastags.FirstOrDefaultAsync(n => n.Name == postHashtag);
 
-                    _context.Hastags.Update(hashtagDb);
-                    await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    var newHashtag = new Hastag()
+                    if (hashtagDb != null)
                     {
-                        Name = postHashtag,
-                        Count = 1,
-                        DateCreated = DateTime.UtcNow,
-                        DateUpdated = DateTime.UtcNow
-                    };
+                        hashtagDb.Count += 1;
+                        hashtagDb.DateUpdated = DateTime.UtcNow;
 
-                    _context.Hastags.Add(newHashtag);
-                    await _context.SaveChangesAsync();
+                        _context.Hastags.Update(hashtagDb);
+                        await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        var newHashtag = new Hastag()
+                        {
+                            Name = postHashtag,
+                            Count = 1,
+                            DateCreated = DateTime.UtcNow,
+                            DateUpdated = DateTime.UtcNow
+                        };
+
+                        _context.Hastags.Add(newHashtag);
+                        await _context.SaveChangesAsync();
+                    }
                 }
             }
         }
 
         public async Task RemovePostHashTagsAsync(string content)
         {
-            ////update hashtags
-            var posthashtags = HastagHelper.GetHastags(content);
-            foreach (var tag in posthashtags)
+            if (!string.IsNullOrEmpty(content))
             {
-                var hastagdb = await _context.Hastags.FirstOrDefaultAsync(n => n.Name == tag);
-                if (hastagdb != null)
+                ////update hashtags
+                var posthashtags = HastagHelper.GetHastags(content);
+                foreach (var tag in posthashtags)
                 {
-                    hastagdb.Count -= 1;
-                    hastagdb.DateUpdated = DateTime.UtcNow;
+                    var hastagdb = await _context.Hastags.FirstOrDefaultAsync(n => n.Name == tag);
+                    if (hastagdb != null)
+                    {
+                        hastagdb.Count -= 1;
+                        hastagdb.DateUpdated = DateTime.UtcNow;
 
-                    _context.Hastags.Update(hastagdb);
-                    await _context.SaveChangesAsync();
+                        _context.Hastags.Update(hastagdb);
+                        await _context.SaveChangesAsync();
+                    }
                 }
             }
         }

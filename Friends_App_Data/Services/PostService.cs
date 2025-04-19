@@ -13,10 +13,12 @@ namespace Friends_App_Data.Services
     public class PostService : IPostService
     {
         private readonly AppDbContext _context;
+        private readonly IFilesService _filesService;
 
-        public PostService(AppDbContext context)
+        public PostService(AppDbContext context, IFilesService filesService)
         {
             _context = context;
+            _filesService = filesService;
         }
 
         public async Task<List<Post>> GetAllPostsAsync(int loggedInUserId)
@@ -34,34 +36,10 @@ namespace Friends_App_Data.Services
             return posts;
         }
 
-        public async Task<Post> CreatePostAsync(Post post, IFormFile image)
+        public async Task<Post> CreatePostAsync(Post post)
         {
-            //Check and save the image
-            if (image != null && image.Length > 0)
-            {
-                string rootFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
-
-                if (image.ContentType.Contains("image"))
-                {
-                    string rootFolderPathImages = Path.Combine(rootFolderPath, "images/posts");
-                    Directory.CreateDirectory(rootFolderPathImages);
-
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
-                    string filePath = Path.Combine(rootFolderPathImages, fileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await image.CopyToAsync(stream);
-                    }
-
-                    //Set the URL to the newPost object
-                    post.ImageUrl = "/images/posts/" + fileName;
-                }
-            }
-
             await _context.Posts.AddAsync(post);
             await _context.SaveChangesAsync();
-
             return post;
         }
 

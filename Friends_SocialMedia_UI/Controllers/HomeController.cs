@@ -1,8 +1,10 @@
 using Friends_App_Data.Data;
 using Friends_App_Data.Data.Models;
 using Friends_App_Data.Helpers;
+using Friends_App_Data.Helpers.Enums;
 using Friends_App_Data.Services;
 using Friends_SocialMedia_UI.ViewModels.Home;
+using Friends_SocialMedia_UI.ViewModels.Stories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,11 +14,13 @@ namespace Friends_SocialMedia_UI.Controllers
     {
         private readonly IPostService _postService;
         private readonly IHashtagService _hashtagService;
+        private readonly IFilesService _fileService;
 
-        public HomeController(IPostService postService, IHashtagService hashtagService, AppDbContext context)
+        public HomeController(IPostService postService, IHashtagService hashtagService, IFilesService filesService)
         {
             _postService = postService;
             _hashtagService = hashtagService;
+            _fileService = filesService;
         }
 
         [HttpGet]
@@ -33,18 +37,19 @@ namespace Friends_SocialMedia_UI.Controllers
         {
             //Get the logged in user
             int loggedInUser = 1;
+            var imageUploadPath = await _fileService.UploadImageAsync(post.Image, ImageFileType.PostImage);
 
             var newPost = new Post()
             {
                 Content = post.Content,
                 DateCreated = DateTime.UtcNow,
                 DateUpdated = DateTime.UtcNow,
-                ImageUrl = "",
+                ImageUrl = imageUploadPath,
                 NoOfReports = 0,
                 UserId = loggedInUser
             };
 
-            await _postService.CreatePostAsync(newPost, post.Image);
+            await _postService.CreatePostAsync(newPost);
             await _hashtagService.AddPostHashTagsAsync(post.Content);
             return RedirectToAction("Index");
         }

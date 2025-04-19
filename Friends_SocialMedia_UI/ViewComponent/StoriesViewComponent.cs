@@ -1,4 +1,5 @@
 ﻿using Friends_App_Data.Data;
+using Friends_App_Data.Services;
 using Friends_SocialMedia_UI.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,21 +8,16 @@ namespace Friends_SocialMedia_UI.ViewComponent
 {
     public class StoriesViewComponent : Microsoft.AspNetCore.Mvc.ViewComponent
     {
-        private readonly AppDbContext _context;
-        private readonly ILogger<StoriesController> _logger;
+        private readonly IStoriesService _storiesService;
 
-        public StoriesViewComponent(AppDbContext context, ILogger<StoriesController> logger)
+        public StoriesViewComponent(IStoriesService storiesService)
         {
-            _context = context;
-            _logger = logger;
+            _storiesService = storiesService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var allStories = await _context.Stories
-                                   .Where(n => n.DateCreated >= DateTime.UtcNow.AddHours(-24))
-                                   .Include(s => s.User)
-                                   .ToListAsync();
+            var allStories =  await _storiesService.GetAllStroiesAsync();
             return View(allStories);
         }
     }

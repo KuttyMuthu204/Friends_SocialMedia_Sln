@@ -3,59 +3,38 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Friends_App_Data.Data;
 using Friends_SocialMedia_UI.ViewModels.Stories;
 using Friends_App_Data.Data.Models;
+using Friends_App_Data.Helpers.Enums;
 using Microsoft.EntityFrameworkCore;
+using Friends_App_Data.Services;
 
 namespace Friends_SocialMedia_UI.Controllers
 {
     public class StoriesController : Controller
     {
-        private readonly AppDbContext _context;
-        private readonly ILogger<StoriesController> _logger;
+        private readonly IStoriesService _storiesService;
+        private readonly IFilesService _fileService;
 
-        public StoriesController(AppDbContext context, ILogger<StoriesController> logger)
+        public StoriesController(IStoriesService storiesService, IFilesService fileService)
         {
-            _context = context;
-            _logger = logger;
+            _storiesService = storiesService;
+            _fileService = fileService;
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateStory(StoryVM storyVM)
         {
             int loggedInUserId = 1;
+            var imageUploadPath = await _fileService.UploadImageAsync(storyVM.Image, ImageFileType.StoryImage);
 
             var newStory = new Story()
             {
                 DateCreated = DateTime.UtcNow,
                 IsDeleted = false,
+                ImageUrl = imageUploadPath,
                 UserId = loggedInUserId
-            };
+            }; 
 
-            if (storyVM.Image != null && storyVM.Image.Length > 0)
-            {
-                string rootFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
-
-                if (storyVM.Image.ContentType.Contains("image"))
-                {
-                    string rootFolderPathImages = Path.Combine(rootFolderPath, "images/stories");
-                    Directory.CreateDirectory(rootFolderPathImages);
-
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(storyVM.Image.FileName);
-                    string filePath = Path.Combine(rootFolderPathImages, fileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await storyVM.Image.CopyToAsync(stream);
-                    }
-
-                    //Set the URL to the newPost object
-                    newStory.ImageUrl = "/images/stories/" + fileName;
-                }
-            }
-
-            //Save the new story to the database
-            await _context.Stories.AddAsync(newStory);
-            await _context.SaveChangesAsync();
-
+            await _storiesService.CreateStoryAsync(newStory);
             return RedirectToAction("Index", "Home");
         }
     }
