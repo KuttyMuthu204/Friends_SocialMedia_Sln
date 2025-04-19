@@ -11,6 +11,7 @@ namespace Friends_App_Data.Services
     public interface IPostService
     {
         Task<List<Post>> GetAllPostsAsync(int loggedInUserId);
+        Task<List<Post>> GetAllFavoritePostsAsync(int loggedInUserId);
         Task<Post> CreatePostAsync(Post post);
         Task<Post> RemovePostAsync(int postId);
 

@@ -36,6 +36,25 @@ namespace Friends_App_Data.Services
             return posts;
         }
 
+        public async Task<List<Post>> GetAllFavoritePostsAsync(int loggedInUserId)
+        {
+            var allFavoritePosts = await _context.Favorites
+                                          .Include(n => n.Post.Reports)
+                                          .Include(n => n.Post.User)
+                                          .Include(n => n.Post.Comments)
+                                              .ThenInclude(n => n.User)
+                                          .Include(n => n.Post.Likes)
+                                          .Include(n => n.Post.Favorites)
+                                          .Where(n => (n.UserId == loggedInUserId
+                                                       && n.Post.Reports.Count < 5 &&
+                                                       !n.Post.IsDeleted))
+                                          .OrderByDescending(n => n.DateCreated)
+                                          .Select(n => n.Post)
+                                          .ToListAsync();
+
+            return allFavoritePosts;
+        }
+
         public async Task<Post> CreatePostAsync(Post post)
         {
             await _context.Posts.AddAsync(post);
@@ -47,7 +66,8 @@ namespace Friends_App_Data.Services
         {
             var postDB = await _context.Posts.FirstOrDefaultAsync(n => n.Id == postId);
 
-            if (postDB != null) {
+            if (postDB != null)
+            {
                 //_context.Posts.Remove(postDB);
                 postDB.IsDeleted = true;
                 _context.Posts.Update(postDB);
@@ -61,7 +81,8 @@ namespace Friends_App_Data.Services
         {
             var commentDb = await _context.Comments.FirstOrDefaultAsync(c => c.Id == commentId);
 
-            if (commentDb != null) {
+            if (commentDb != null)
+            {
                 _context.Comments.Remove(commentDb);
                 await _context.SaveChangesAsync();
             }
@@ -94,7 +115,8 @@ namespace Friends_App_Data.Services
                 var newFavorite = new Favorite()
                 {
                     PostId = postId,
-                    UserId = userId
+                    UserId = userId,
+                    DateCreated = DateTime.UtcNow
                 };
 
                 await _context.Favorites.AddAsync(newFavorite);
