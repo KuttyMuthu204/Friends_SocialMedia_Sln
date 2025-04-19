@@ -1,5 +1,6 @@
 using Friends_App_Data.Data;
 using Friends_App_Data.Helpers;
+using Friends_App_Data.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,10 @@ builder.Services.AddControllersWithViews();
 //DB Connection
 var dbConnection = builder.Configuration.GetConnectionString("FriendsConnection");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(dbConnection));
+
+//Services Configuration
+builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<IHashtagService, HashtagService>();
 
 var app = builder.Build();
 
@@ -38,6 +43,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=GetAllPostsAsyncs}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
