@@ -1,4 +1,5 @@
-﻿using Friends_App_Data.Data.Models;
+﻿using System.Runtime.CompilerServices;
+using Friends_App_Data.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Friends_App_Data.Data
@@ -17,6 +18,7 @@ namespace Friends_App_Data.Data
         public DbSet<Favorite> Favorites { get; set; }
         public DbSet<Report> Reports { get; set; }
         public DbSet<Story> Stories { get; set; }
+        public DbSet<Hastag> Hastags { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

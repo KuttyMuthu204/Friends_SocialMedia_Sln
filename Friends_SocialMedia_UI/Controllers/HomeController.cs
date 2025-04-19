@@ -1,5 +1,6 @@
 using Friends_App_Data.Data;
 using Friends_App_Data.Data.Models;
+using Friends_App_Data.Helpers;
 using Friends_SocialMedia_UI.ViewModels.Home;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -76,6 +77,36 @@ namespace Friends_SocialMedia_UI.Controllers
 
             await _context.Posts.AddAsync(newPost);
             await _context.SaveChangesAsync();
+
+            //find and store the hashtags
+            var postsHashtags = HastagHelper.GetHastags(post.Content);
+
+            foreach (var postHashtag in postsHashtags)
+            {
+                var hashtagDb = await _context.Hastags.FirstOrDefaultAsync(n => n.Name == postHashtag);
+
+                if (hashtagDb != null)
+                {
+                    hashtagDb.Count += 1;
+                    hashtagDb.DateUpdated = DateTime.UtcNow;
+
+                    _context.Hastags.Update(hashtagDb);
+                    await _context.SaveChangesAsync(); 
+                }
+                else
+                {
+                    var newHashtag = new Hastag()
+                     {
+                        Name = postHashtag,
+                        Count = 1,
+                        DateCreated = DateTime.UtcNow,
+                        DateUpdated = DateTime.UtcNow
+                    };
+
+                    _context.Hastags.Add(newHashtag);
+                    await _context.SaveChangesAsync();
+                }
+            }
 
             //Redirect to the home page
             return RedirectToAction("GetAllPostsAsyncs");
@@ -219,6 +250,22 @@ namespace Friends_SocialMedia_UI.Controllers
                 postDb.IsDeleted = true;
                 _context.Posts.Update(postDb);
                 await _context.SaveChangesAsync();
+
+ 
+                //update hashtags
+                var postHashTags = HastagHelper.GetHastags(postDb.Content);
+                foreach (var tag in postHashTags) {
+
+                    var hastagDb = await _context.Hastags.FirstOrDefaultAsync(n => n.Name == tag);
+                    if (hastagDb != null) {
+                        hastagDb.Count -= 1;
+                        hastagDb.DateUpdated = DateTime.UtcNow;
+
+                        _context.Hastags.Update(hastagDb);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
             }
 
             return RedirectToAction("GetAllPostsAsyncs");

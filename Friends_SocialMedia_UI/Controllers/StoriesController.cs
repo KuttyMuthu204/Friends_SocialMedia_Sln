@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Friends_App_Data.Data;
 using Friends_SocialMedia_UI.ViewModels.Stories;
 using Friends_App_Data.Data.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Friends_SocialMedia_UI.Controllers
 {
@@ -15,11 +16,6 @@ namespace Friends_SocialMedia_UI.Controllers
         {
             _context = context;
             _logger = logger;
-        }
-
-        public IActionResult Index()
-        {
-            return View();
         }
 
         [HttpPost]
@@ -60,7 +56,7 @@ namespace Friends_SocialMedia_UI.Controllers
             await _context.Stories.AddAsync(newStory);
             await _context.SaveChangesAsync();
 
-            return View("Home/Index");
+            return RedirectToAction("Index", "Home");
         }
     }
 }
