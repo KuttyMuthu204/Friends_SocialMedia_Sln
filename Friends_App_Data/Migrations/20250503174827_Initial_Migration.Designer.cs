@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Friends_App_Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250418214839_hastag-table-added")]
-    partial class hastagtableadded
+    [Migration("20250503174827_Initial_Migration")]
+    partial class Initial_Migration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
