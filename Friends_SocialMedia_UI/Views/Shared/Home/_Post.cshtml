@@ -71,7 +71,7 @@
 	</div>
 
 	@* Post content *@
-	<a>
+	<a asp-controller="Home" asp-action="GetPosById" asp-route-postId="@Model.Id">
 		<div class="sm:px-4 p-2.5 pt-0 w-full">
 			<p class="font-normal">
 				@Model.Content
@@ -81,7 +81,7 @@
 
 	@if (!string.IsNullOrEmpty(Model.ImageUrl))
 	{
-		<a>
+		<a asp-controller="Home" asp-action="GetPosById" asp-route-postId="@Model.Id">
 			<div class="relative w-full lg:h-96 h-full sm:px-4">
 				<img src="@Url.Content(Model.ImageUrl)" class="sm:rounded-lg w-full h-full object-cover" />
 			</div>
@@ -185,7 +185,7 @@
 			@if (Model.Comments.Count >= 3)
 			{
 				<div class="p-1.5">
-					<a>Show all comments</a>
+					<a asp-controller="Home" asp-action="GetPosById" asp-route-postId="@Model.Id">Show all comments</a>
 				</div>
 			}
 		</div>
