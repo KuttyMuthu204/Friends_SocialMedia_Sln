@@ -1,6 +1,6 @@
 ﻿namespace Friends_SocialMedia_UI.ViewModels.Settings
 {
-    public class ProfileVM
+    public class UpdateProfileVM
     {
         public string FullName { get; set; }
         public string EmailAddress { get; set; }

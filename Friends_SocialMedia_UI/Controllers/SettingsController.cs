@@ -33,9 +33,15 @@ namespace Friends_SocialMedia_UI.Controllers
         }
 
         [HttpPost] 
-        public async Task<IActionResult> UpdateProfile(ProfileVM profileVM)
+        public async Task<IActionResult> UpdateProfile(UpdateProfileVM profileVM)
         {
             return RedirectToAction("Index");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdatePassword(UpdatePasswordVM updatePasswordVM)
+        {
+            return RedirectToAction("Index");
+        } 
     }
 }
