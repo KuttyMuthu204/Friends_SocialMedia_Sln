@@ -10,5 +10,7 @@ namespace Friends_App_Data.Services
     public interface IUsersService
     {
         Task<User> GetUser(int loggedInUserId);
+
+        Task UpdateProfilePicture(int loggedInUserId, string profilePicUrl);
     }
 }

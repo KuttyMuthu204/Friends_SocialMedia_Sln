@@ -24,5 +24,17 @@ namespace Friends_App_Data.Services
                 .Where(u => u.Id == loggedInUserId)
                 .FirstOrDefaultAsync() ?? new User();
         }
+
+        public async Task UpdateProfilePicture(int loggedInUserId, string profilePicUrl)
+        {
+            var user = await _context.Users.Where(u => u.Id == loggedInUserId)
+                                      .FirstOrDefaultAsync();
+            if (user != null)
+            {
+                user.ProfilePictureUrl = profilePicUrl;
+                _context.Users.Update(user);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }
