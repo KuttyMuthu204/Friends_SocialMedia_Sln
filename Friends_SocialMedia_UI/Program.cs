@@ -1,6 +1,7 @@
 using Friends_App_Data.Data;
 using Friends_App_Data.Helpers;
 using Friends_App_Data.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,20 +9,28 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-//DB Connection
+// DB Connection
 var dbConnection = builder.Configuration.GetConnectionString("FriendsConnection");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(dbConnection));
 
-//Services Configuration
+// Services Configuration
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IHashtagService, HashtagService>();
 builder.Services.AddScoped<IStoriesService, StoriesService>();
 builder.Services.AddScoped<IFilesService, FilesService>();
 builder.Services.AddScoped<IUsersService, UsersService>();
 
+// Identity configurations
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddAuthentication();
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
-//Seed the databse with Initial Data
+// Seed the database with Initial Data
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -42,6 +51,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
