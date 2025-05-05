@@ -31,5 +31,11 @@ namespace Friends_SocialMedia_UI.Controllers
             await _usersService.UpdateProfilePicture(loggedInUserId, uploadedProfilePictureUrl);
             return RedirectToAction("Index");
         }
+
+        [HttpPost] 
+        public async Task<IActionResult> UpdateProfile(ProfileVM profileVM)
+        {
+            return RedirectToAction("Index");
+        }
     }
 }
