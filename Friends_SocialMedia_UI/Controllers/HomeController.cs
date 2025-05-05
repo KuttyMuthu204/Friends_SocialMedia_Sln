@@ -32,6 +32,12 @@ namespace Friends_SocialMedia_UI.Controllers
             return View(allPosts);
         }
 
+        public async Task<IActionResult> GetPosById(int postId)
+        {
+            var post = await _postService.GetPostByIdAsync(postId);
+            return View("Details", post);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreatePost(PostVM post)
         {
