@@ -36,6 +36,18 @@ namespace Friends_App_Data.Services
             return posts;
         }
 
+        public async Task<Post> GetPostByIdAsync(int postId)
+        {
+            var post = await _context.Posts
+                              .Include(u => u.User)
+                              .Include(n => n.Likes)
+                              .Include(f => f.Favorites)
+                              .Include(n => n.Comments).ThenInclude(n => n.User)
+                              .FirstOrDefaultAsync(n => n.Id == postId);
+                
+            return post;
+        }
+
         public async Task<List<Post>> GetAllFavoritePostsAsync(int loggedInUserId)
         {
             var allFavoritePosts = await _context.Favorites
