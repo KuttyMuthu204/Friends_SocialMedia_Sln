@@ -92,8 +92,17 @@ namespace Friends_App_Data.Data
                .WithMany(p => p.Reports)
                .HasForeignKey(l => l.UserId)
                .OnDelete(DeleteBehavior.Restrict);
-
+ 
             base.OnModelCreating(modelBuilder);
+
+            //Customize the default Identity table names
+            modelBuilder.Entity<User>().ToTable("Users");
+            modelBuilder.Entity<IdentityUser<int>>().ToTable("Roles");
+            modelBuilder.Entity<IdentityUserRole<int>>().ToTable("UserRoles");
+            modelBuilder.Entity<IdentityUserClaim<int>>().ToTable("UserClaims");
+            modelBuilder.Entity<IdentityUserLogin<int>>().ToTable("UserLogins");
+            modelBuilder.Entity<IdentityRoleClaim<int>>().ToTable("RoleClaims");
+            modelBuilder.Entity<IdentityUserToken<int>>().ToTable("UserTokens");
         }
     }
 }
