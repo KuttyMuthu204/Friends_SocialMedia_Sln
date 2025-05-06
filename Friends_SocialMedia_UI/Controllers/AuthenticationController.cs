@@ -59,6 +59,11 @@ namespace Friends_SocialMedia_UI.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+
             return View(registerVM);
         }
     }
