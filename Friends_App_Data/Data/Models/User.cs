@@ -1,9 +1,10 @@
 ﻿
+using Microsoft.AspNetCore.Identity;
+
 namespace Friends_App_Data.Data.Models
 {
-    public class User
+    public class User : IdentityUser<int>
     {
-        public int Id { get; set; }
         public string FullName { get; set; }
         public string? ProfilePictureUrl { get; set; }
         public bool IsDeleted { get; set; }

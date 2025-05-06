@@ -1,4 +1,5 @@
 using Friends_App_Data.Data;
+using Friends_App_Data.Data.Models;
 using Friends_App_Data.Helpers;
 using Friends_App_Data.Services;
 using Microsoft.AspNetCore.Identity;
@@ -21,7 +22,7 @@ builder.Services.AddScoped<IFilesService, FilesService>();
 builder.Services.AddScoped<IUsersService, UsersService>();
 
 // Identity configurations
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+builder.Services.AddIdentity<User, IdentityRole<int>>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
