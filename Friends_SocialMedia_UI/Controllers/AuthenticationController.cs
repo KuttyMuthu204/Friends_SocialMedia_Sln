@@ -90,5 +90,12 @@ namespace Friends_SocialMedia_UI.Controllers
 
             return View(registerVM);
         }
+
+        [Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Login");
+        }
     }
 }
