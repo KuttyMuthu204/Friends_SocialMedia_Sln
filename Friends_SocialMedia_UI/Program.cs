@@ -33,6 +33,15 @@ builder.Services.AddIdentity<User, IdentityRole<int>>(options => {
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Authentication/Login";
+    options.LogoutPath = "/Authentication/Logout";
+    options.AccessDeniedPath = "/Authentication/AccessDenied";
+    options.SlidingExpiration = true;
+    options.ExpireTimeSpan = TimeSpan.FromDays(30);
+}); 
+
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 

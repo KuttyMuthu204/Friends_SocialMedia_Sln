@@ -5,11 +5,13 @@ using Friends_App_Data.Helpers.Enums;
 using Friends_App_Data.Services;
 using Friends_SocialMedia_UI.ViewModels.Home;
 using Friends_SocialMedia_UI.ViewModels.Stories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Friends_SocialMedia_UI.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly IPostService _postService;

@@ -1,6 +1,7 @@
 ﻿using Friends_App_Data.Data.Models;
 using Friends_App_Data.Helpers.Concerns;
 using Friends_SocialMedia_UI.ViewModels.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 

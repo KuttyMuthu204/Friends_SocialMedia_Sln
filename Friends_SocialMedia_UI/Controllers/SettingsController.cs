@@ -1,10 +1,12 @@
 ﻿using Friends_App_Data.Helpers.Enums;
 using Friends_App_Data.Services;
 using Friends_SocialMedia_UI.ViewModels.Settings;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Friends_SocialMedia_UI.Controllers
 {
+    [Authorize]
     public class SettingsController : Controller
     {
         private readonly IUsersService _usersService;

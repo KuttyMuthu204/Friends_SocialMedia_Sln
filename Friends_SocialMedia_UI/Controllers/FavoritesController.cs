@@ -1,8 +1,10 @@
 ﻿using Friends_App_Data.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Friends_SocialMedia_UI.Controllers
 {
+    [Authorize]
     public class FavoritesController : Controller
     {
         private readonly IPostService _postService;

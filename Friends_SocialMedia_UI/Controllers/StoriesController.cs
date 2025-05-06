@@ -6,9 +6,11 @@ using Friends_App_Data.Data.Models;
 using Friends_App_Data.Helpers.Enums;
 using Microsoft.EntityFrameworkCore;
 using Friends_App_Data.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Friends_SocialMedia_UI.Controllers
 {
+    [Authorize]
     public class StoriesController : Controller
     {
         private readonly IStoriesService _storiesService;

@@ -12,13 +12,13 @@
 
 	<div id="wrapper">
 
-		@if (!User.Identity.IsAuthenticated)
+		@if (User.Identity.IsAuthenticated)
 		{
 			@* Topbar *@
-		@* 	<partial name="Navigation/_TopBar" />  *@
+			<partial name="Navigation/_TopBar" /> 
 
 			@* Side bar (left) *@
-		@* 	<partial name="Navigation/_SideBar" /> *@
+			<partial name="Navigation/_SideBar" />
 
 			@* Home *@
 		}
