@@ -1,5 +1,7 @@
-﻿using Friends_App_Data.Data.Models;
+﻿using System.Security.Claims;
+using Friends_App_Data.Data.Models;
 using Friends_App_Data.Helpers.Concerns;
+using Friends_App_Data.Helpers.Constants;
 using Friends_SocialMedia_UI.ViewModels.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -31,6 +33,21 @@ namespace Friends_SocialMedia_UI.Controllers
                 return View(loginVM);
             }
 
+            var loggedInUser = await _userManager.FindByEmailAsync(loginVM.Email);
+
+            if (loggedInUser == null)
+            {
+                ModelState.AddModelError("", "Invalid email or password. Please, try again");
+                return View(loginVM);
+            }
+
+            var existingUserClaims = await _userManager.GetClaimsAsync(loggedInUser);
+
+            if (!existingUserClaims.Any(c => c.Type == CustomClass.FullName))
+            {
+                await _userManager.AddClaimAsync(loggedInUser, new Claim(CustomClass.FullName, loggedInUser.FullName));
+            }
+
             var result = await _signInManager.PasswordSignInAsync(loginVM.Email, loginVM.Password, false, false);
 
             if (result.Succeeded)
@@ -39,7 +56,7 @@ namespace Friends_SocialMedia_UI.Controllers
             }
             else
             {
-                ModelState.AddModelError("", "Invalid login attempt");
+                ModelState.AddModelError("", "Invalid email or password. Please, try again");
             }
 
             return View();
@@ -79,6 +96,7 @@ namespace Friends_SocialMedia_UI.Controllers
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(newUser, AppRole.User);
+                await _userManager.AddClaimAsync(newUser, new Claim(CustomClass.FullName, newUser.FullName));
                 await _signInManager.SignInAsync(newUser, isPersistent: false);
                 return RedirectToAction("Index", "Home");
             }
