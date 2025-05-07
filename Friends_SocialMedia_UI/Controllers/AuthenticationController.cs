@@ -3,6 +3,7 @@ using Friends_App_Data.Data.Models;
 using Friends_App_Data.Helpers.Concerns;
 using Friends_App_Data.Helpers.Constants;
 using Friends_SocialMedia_UI.ViewModels.Authentication;
+using Friends_SocialMedia_UI.ViewModels.Settings;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -107,6 +108,43 @@ namespace Friends_SocialMedia_UI.Controllers
             }
 
             return View(registerVM);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdatePassword(UpdatePasswordVM updatePasswordVM)
+        {
+            if (updatePasswordVM.ConfirmPassword != updatePasswordVM.NewPassword)
+            {
+                TempData["PasswordError"] = "Passwords do not match";
+                TempData["ActiveTab"] = "Password";
+                return RedirectToAction("Index", "Settings");
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            var isCurrentPasswordValid = await _userManager.CheckPasswordAsync(user, updatePasswordVM.CurrentPassword);
+
+            if (!isCurrentPasswordValid)
+            {
+                TempData["PasswordError"] = "Current password is invalid";
+                TempData["ActiveTab"] = "Password";
+                return RedirectToAction("Index", "Settings");
+            }
+
+            var result = await _userManager.ChangePasswordAsync(user, updatePasswordVM.CurrentPassword, updatePasswordVM.NewPassword);
+
+            if (result.Succeeded)
+            {
+                TempData["PasswordSuccess"] = "Password updated successfully";
+                TempData["ActiveTab"] = "Password";
+                await _signInManager.RefreshSignInAsync(user);
+            }
+            else
+            {
+                TempData["PasswordError"] = "Failed to update password";
+                TempData["ActiveTab"] = "Password";
+            }
+
+            return RedirectToAction("Index", "Settings");
         }
 
         [Authorize]

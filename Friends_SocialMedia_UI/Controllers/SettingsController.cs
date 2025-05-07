@@ -39,11 +39,5 @@ namespace Friends_SocialMedia_UI.Controllers
         {
             return RedirectToAction("Index");
         }
-
-        [HttpPost]
-        public async Task<IActionResult> UpdatePassword(UpdatePasswordVM updatePasswordVM)
-        {
-            return RedirectToAction("Index");
-        } 
     }
 }
