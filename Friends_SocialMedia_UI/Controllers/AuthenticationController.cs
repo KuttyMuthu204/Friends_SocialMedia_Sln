@@ -49,7 +49,7 @@ namespace Friends_SocialMedia_UI.Controllers
                 await _userManager.AddClaimAsync(loggedInUser, new Claim(CustomClass.FullName, loggedInUser.FullName));
             }
 
-            var result = await _signInManager.PasswordSignInAsync(loginVM.Email, loginVM.Password, false, false);
+            var result = await _signInManager.PasswordSignInAsync(loggedInUser.UserName, loginVM.Password, false, false);
 
             if (result.Succeeded)
             {
@@ -62,7 +62,6 @@ namespace Friends_SocialMedia_UI.Controllers
 
             return View();
         }
-
 
         public async Task<IActionResult> Register()
         {
@@ -142,6 +141,38 @@ namespace Friends_SocialMedia_UI.Controllers
             {
                 TempData["PasswordError"] = "Failed to update password";
                 TempData["ActiveTab"] = "Password";
+            }
+
+            return RedirectToAction("Index", "Settings");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateProfile(UpdateProfileVM profileVM)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Login");
+            }
+            else
+            {
+                user.FullName = profileVM.FullName;
+                user.Bio = profileVM.Bio;
+                user.UserName = profileVM.UserName;
+
+                var result = await _userManager.UpdateAsync(user);
+
+                if (!result.Succeeded)
+                {
+                    TempData["UserProfileError"] = "User profile could not be updated";
+                    TempData["ActiveTab"] = "Profile";
+                }
+                else
+                {
+                    TempData["UserProfileSuccess"] = "User profile updated successfully";
+                    TempData["ActiveTab"] = "Profile";
+                    await _signInManager.RefreshSignInAsync(user);
+                }
             }
 
             return RedirectToAction("Index", "Settings");
