@@ -1,9 +1,13 @@
 ﻿@using Friends_App_Data.Helpers.Constants
 @using System.Security.Claims
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<User> userManager;
 
 @{
-	var userName = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value; ;
-	var fullName = User.Claims.FirstOrDefault(c => c.Type == CustomClass.FullName)?.Value;
+	var loggedInUser = await userManager.GetUserAsync(User);
+	var userName = loggedInUser?.UserName;
+	var fullName = loggedInUser?.FullName;
+	var profilePicUrl = loggedInUser?.ProfilePictureUrl;
 }
 
 <header class="z-[100] h-[--m-top] fixed top-0 left-0 w-full flex items-center bg-white/80 sky-50 backdrop-blur-xl border-b border-slate-200">
@@ -17,7 +21,7 @@
 
 			<div id="logo" class="flex items-center" style="margin-left:10px">
 				<a asp-controller="Home" class="flex items-center">
-					<img src="~/images/logo.png" class="w-10 md:block hidden" />
+					<img src="@(profilePicUrl ?? Url.Content("~/images/avatar/user.png"))" class="w-10 md:block hidden" />
 					<span class="ml-2 text-black">Friends</span>
 				</a>
 			</div>
@@ -60,7 +64,7 @@
 				<div class="hidden bg-white rounded-lg drop-shadow-xl w-64 border2" uk-drop="offset:6;pos: bottom-right;animate-out: true;">
 					<a>
 						<div class="p-4 py-5 flex items-center gap-4">
-							<img src="~/images/avatar/user.png" class="w-10 h-10 rounded-full shadow" />
+							<img src="@(profilePicUrl ?? Url.Content("~/images/avatar/user.png"))" class="w-10 h-10 rounded-full shadow" />
 							<div class="flex-1">
 								<div class="text-sm mt-1 text-black font-light/70">@fullName</div>
 								<div class="text-sm mt-1 text-black font-light/70">@userName</div>
