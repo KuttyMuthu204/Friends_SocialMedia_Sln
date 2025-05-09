@@ -7,11 +7,12 @@ using Friends_App_Data.Helpers.Enums;
 using Microsoft.EntityFrameworkCore;
 using Friends_App_Data.Services;
 using Microsoft.AspNetCore.Authorization;
+using Friends_SocialMedia_UI.Controllers.Base;
 
 namespace Friends_SocialMedia_UI.Controllers
 {
     [Authorize]
-    public class StoriesController : Controller
+    public class StoriesController : BaseController
     {
         private readonly IStoriesService _storiesService;
         private readonly IFilesService _fileService;
@@ -25,7 +26,8 @@ namespace Friends_SocialMedia_UI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateStory(StoryVM storyVM)
         {
-            int loggedInUserId = 1;
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
             var imageUploadPath = await _fileService.UploadImageAsync(storyVM.Image, ImageFileType.StoryImage);
 
             var newStory = new Story()
@@ -33,8 +35,8 @@ namespace Friends_SocialMedia_UI.Controllers
                 DateCreated = DateTime.UtcNow,
                 IsDeleted = false,
                 ImageUrl = imageUploadPath,
-                UserId = loggedInUserId
-            }; 
+                UserId = loggedInUserId.Value
+            };
 
             await _storiesService.CreateStoryAsync(newStory);
             return RedirectToAction("Index", "Home");

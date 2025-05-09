@@ -1,8 +1,11 @@
+using System.Reflection.Metadata.Ecma335;
+using System.Security.Claims;
 using Friends_App_Data.Data;
 using Friends_App_Data.Data.Models;
 using Friends_App_Data.Helpers;
 using Friends_App_Data.Helpers.Enums;
 using Friends_App_Data.Services;
+using Friends_SocialMedia_UI.Controllers.Base;
 using Friends_SocialMedia_UI.ViewModels.Home;
 using Friends_SocialMedia_UI.ViewModels.Stories;
 using Microsoft.AspNetCore.Authorization;
@@ -12,7 +15,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Friends_SocialMedia_UI.Controllers
 {
     [Authorize]
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly IPostService _postService;
         private readonly IHashtagService _hashtagService;
@@ -28,9 +31,10 @@ namespace Friends_SocialMedia_UI.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            int loggedInUserId = 1;
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
 
-            var allPosts = await _postService.GetAllPostsAsync(loggedInUserId);
+            var allPosts = await _postService.GetAllPostsAsync(loggedInUserId.Value);
             return View(allPosts);
         }
 
@@ -44,7 +48,9 @@ namespace Friends_SocialMedia_UI.Controllers
         public async Task<IActionResult> CreatePost(PostVM post)
         {
             //Get the logged in user
-            int loggedInUser = 1;
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
+
             var imageUploadPath = await _fileService.UploadImageAsync(post.Image, ImageFileType.PostImage);
 
             var newPost = new Post()
@@ -54,7 +60,7 @@ namespace Friends_SocialMedia_UI.Controllers
                 DateUpdated = DateTime.UtcNow,
                 ImageUrl = imageUploadPath,
                 NoOfReports = 0,
-                UserId = loggedInUser
+                UserId = loggedInUserId.Value
             };
 
             await _postService.CreatePostAsync(newPost);
@@ -65,21 +71,23 @@ namespace Friends_SocialMedia_UI.Controllers
         [HttpPost]
         public async Task<IActionResult> TogglePostLike(PostLikeVM postLikeVM)
         {
-            int loggedInUser = 1;
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
 
-            await _postService.TogglePostLikeAsync(postLikeVM.PostId, loggedInUser);
+            await _postService.TogglePostLikeAsync(postLikeVM.PostId, loggedInUserId.Value);
             return RedirectToAction("Index");
         }
 
         [HttpPost]
         public async Task<IActionResult> AddPostComment(PostCommentVM postCommentVM)
         {
-            int loggedInUser = 1;
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
 
             //Create a new comment
             var newComment = new Comment()
             {
-                UserId = loggedInUser,
+                UserId = loggedInUserId.Value,
                 PostId = postCommentVM.PostId,
                 Content = postCommentVM.Content,
                 DateCreated = DateTime.UtcNow,
@@ -100,27 +108,30 @@ namespace Friends_SocialMedia_UI.Controllers
         [HttpPost]
         public async Task<IActionResult> TogglePostFavorite(PostFavoriteVM postFavoriteVM)
         {
-            int loggedInUser = 1;
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
 
-            await _postService.TogglePostFavoriteAsync(postFavoriteVM.PostId, loggedInUser);
+            await _postService.TogglePostFavoriteAsync(postFavoriteVM.PostId, loggedInUserId.Value);
             return RedirectToAction("Index");
         }
 
         [HttpPost]
         public async Task<IActionResult> TogglePostVisibility(PostVisibilityVM postVisibilityVM)
         {
-            int loggedInUser = 1;
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
 
-            await _postService.TogglePostVisibilityAsync(postVisibilityVM.PostId, loggedInUser);
+            await _postService.TogglePostVisibilityAsync(postVisibilityVM.PostId, loggedInUserId.Value);
             return RedirectToAction("Index");
         }
 
         [HttpPost]
         public async Task<IActionResult> AddPostReport(PostReportVM postReportVM)
         {
-            int loggedInUser = 1;
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
 
-            await _postService.ReportPostAsync(postReportVM.PostId, loggedInUser);
+            await _postService.ReportPostAsync(postReportVM.PostId, loggedInUserId.Value);
             return RedirectToAction("Index");
         }
 
@@ -131,5 +142,6 @@ namespace Friends_SocialMedia_UI.Controllers
             await _hashtagService.RemovePostHashTagsAsync(postRemoved.Content);
             return RedirectToAction("Index");
         }
+
     }
 }

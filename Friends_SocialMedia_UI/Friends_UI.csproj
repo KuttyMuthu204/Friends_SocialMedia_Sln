@@ -1,11 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
+<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
@@ -17,9 +15,7 @@
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="9.0.4" />
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="9.0.4" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Friends_App_Data\Friends_Data.csproj" />
   </ItemGroup>
-
 </Project>

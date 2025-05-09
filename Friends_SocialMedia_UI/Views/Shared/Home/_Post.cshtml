@@ -1,7 +1,11 @@
-﻿@model Post
+﻿@using System.Security.Claims
+@model Post
 
 @{
     TimeSpan timeSpanSincePosted = DateTime.UtcNow.Subtract(Model.DateCreated);
+
+    var loggedInUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    var userId = int.TryParse(loggedInUserId, out int result) ? result : 0;
 
     string displayName = "";
     if (timeSpanSincePosted.TotalDays > 365)
@@ -15,10 +19,10 @@
     else
         displayName = "Just now";
 
-    bool isFavorited = Model.Favorites.Any(n => n.UserId == 1);
-    bool isLiked = Model.Likes.Any(n => n.UserId == 1);
-    bool isPrivate = Model.IsPrivate == true && Model.UserId == 1;
-    bool isReported = Model.Reports.Any(n => n.UserId == 1);
+    bool isFavorited = Model.Favorites.Any(n => n.UserId == userId);
+    bool isLiked = Model.Likes.Any(n => n.UserId == userId);
+    bool isPrivate = Model.IsPrivate == true && Model.UserId == userId;
+    bool isReported = Model.Reports.Any(n => n.UserId == userId);
 
     bool showAllComments = ViewData["ShowAllComments"] as bool? ?? false;
 }
@@ -27,17 +31,19 @@
     @* Post heading *@
     <div class="flex gap-3 sm:p-4 p-2.5 text-sm font-medium">
         <a>
-            <img src="@(string.IsNullOrEmpty(Model.User.ProfilePictureUrl) ? "~/images/avatar/user.png" : @Url.Content(Model.User.ProfilePictureUrl))" class="w-9 h-9 rounded-full" />
+            <img src="@(string.IsNullOrEmpty(Model.User.ProfilePictureUrl) ? Url.Content("~/images/avatar/user.png") : Model.User.ProfilePictureUrl)"
+                class="w-9 h-9 rounded-full" />
         </a>
         <div class="flex-1">
             <a>
                 <div class="text-black">@Model.User.FullName</div>
-                <div class="text-xs text-gray-500/80" title="@Model.DateCreated.ToString("MM/dd/yyyy HH:mm")">@displayName</div>
+                <div class="text-xs text-gray-500/80" title="@Model.DateCreated.ToString("MM/dd/yyyy HH:mm")">
+                    @displayName</div>
             </a>
         </div>
         <div class="-mr-1">
             <div class="forms-container" style="display: flex; gap: 10px; align-items: center;">
-                @if (Model.UserId == 1)
+                @if (Model.UserId == userId)
                 {
                     <form asp-asp-controller="Home" asp-action="TogglePostVisibility" method="post">
                         <input type="hidden" name="postId" value="@Model.Id" />
@@ -54,7 +60,8 @@
                     </form>
 
                     <form>
-                        <button type="button" onclick="openPostDeleteConfirmation(@Model.Id)" class="text-red-400 hover:!bg-red-50 icon-link">
+                        <button type="button" onclick="openPostDeleteConfirmation(@Model.Id)"
+                            class="text-red-400 hover:!bg-red-50 icon-link">
                             <img src="~/images/icons/delete.png" class="w-5 h-5" title="Remove post" />
                         </button>
                     </form>
@@ -141,9 +148,9 @@
     @* Add comment section *@
     <div>
         <div class="p-2.5 border-t border-gray-100 font-normal space-y-3 relative">
-            @foreach (var comment in showAllComments ? 
-                Model.Comments.OrderByDescending(n => n.DateCreated) :
-                Model.Comments.OrderByDescending(n => n.DateCreated).Take(2))
+            @foreach (var comment in showAllComments ?
+                        Model.Comments.OrderByDescending(n => n.DateCreated) :
+                        Model.Comments.OrderByDescending(n => n.DateCreated).Take(2))
             {
                 TimeSpan timeSpanSinceCommented = DateTime.UtcNow.Subtract(comment.DateCreated);
 
@@ -169,7 +176,7 @@
                     else
                     {
                         <a>
-                            <img src="~/images/avatar/user.png class="w-9 h-9 rounded-full" />
+                            <img src="~/images/avatar/user.png class=" w-9 h-9 rounded-full" />
                         </a>
                     }
                     <div class="flex-1">
@@ -207,7 +214,9 @@
                 <img src="~/images/avatar/user.png" class="w-6 h-6 rounded-full" />
                 <input type="hidden" name="postId" value="@Model.Id" />
                 <div class="flex-1 relative overflow-hidden h-10">
-                    <textarea name="content" placeholder="Add Comment...." rows="1" class="w-full resize-none bg-black-10 px-4 py-2 border border-gray-300" style="border-radius:5px"></textarea>
+                    <textarea name="content" placeholder="Add Comment...." rows="1"
+                        class="w-full resize-none bg-black-10 px-4 py-2 border border-gray-300"
+                        style="border-radius:5px"></textarea>
                 </div>
                 <button type="submit" class="text-sm rounded-full py-1.5 px-3.5 bg-secondary">Comment</button>
             </div>

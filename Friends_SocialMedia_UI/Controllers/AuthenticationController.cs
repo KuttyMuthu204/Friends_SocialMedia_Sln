@@ -21,7 +21,7 @@ namespace Friends_SocialMedia_UI.Controllers
             _signInManager = signInManager;
         }
 
-        public async Task<IActionResult> Login()
+        public IActionResult Login()
         {
             return View();
         }
@@ -63,7 +63,7 @@ namespace Friends_SocialMedia_UI.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Register()
+        public IActionResult Register()
         {
             return View();
         }

@@ -2,6 +2,7 @@
 using Friends_App_Data.Data.Models;
 using Friends_App_Data.Helpers.Enums;
 using Friends_App_Data.Services;
+using Friends_SocialMedia_UI.Controllers.Base;
 using Friends_SocialMedia_UI.ViewModels.Settings;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -10,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Friends_SocialMedia_UI.Controllers
 {
     [Authorize]
-    public class SettingsController : Controller
+    public class SettingsController : BaseController
     {
         private readonly IUsersService _usersService;
         private readonly IFilesService _filesService;
@@ -25,18 +26,21 @@ namespace Friends_SocialMedia_UI.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var loggedInUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var user = await _usersService.GetUser(int.Parse(loggedInUserId));
-            var loggedInUser = await _userManager.GetUserAsync(User);
-            return View(loggedInUser);
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
+
+            var user = await _usersService.GetUser(loggedInUserId.Value);
+            return View(user);
         }
 
         [HttpPost]
         public async Task<IActionResult> UpdateProfilePicture(ProfilePictureVM profilePictureVM)
         {
-            var loggedInUserId = 1;
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
+
             var uploadedProfilePictureUrl = await _filesService.UploadImageAsync(profilePictureVM.ProfilePictureImage, ImageFileType.ProfilePicture);
-            await _usersService.UpdateProfilePicture(loggedInUserId, uploadedProfilePictureUrl);
+            await _usersService.UpdateProfilePicture(loggedInUserId.Value, uploadedProfilePictureUrl);
             return RedirectToAction("Index");
         }
     }
