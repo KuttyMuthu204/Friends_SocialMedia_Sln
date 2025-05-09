@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Friends_App_Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250509104554_Initial-Migration")]
+    [Migration("20250509163948_Initial-Migration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -221,7 +221,6 @@ namespace Friends_App_Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Bio")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")

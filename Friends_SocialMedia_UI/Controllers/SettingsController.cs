@@ -29,7 +29,8 @@ namespace Friends_SocialMedia_UI.Controllers
             var loggedInUserId = GetUserId();
             if (loggedInUserId == null) return RedirectToLogin();
 
-            return View(loggedInUserId);
+            var user = await _usersService.GetUser(loggedInUserId.Value);
+            return View(user);
         }
 
         [HttpPost]
