@@ -2,6 +2,7 @@ using Friends_App_Data.Data;
 using Friends_App_Data.Data.Models;
 using Friends_App_Data.Helpers;
 using Friends_App_Data.Services;
+using Friends_Data.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +21,7 @@ builder.Services.AddScoped<IHashtagService, HashtagService>();
 builder.Services.AddScoped<IStoriesService, StoriesService>();
 builder.Services.AddScoped<IFilesService, FilesService>();
 builder.Services.AddScoped<IUsersService, UsersService>();
+builder.Services.AddScoped<IFriendsService, FriendsService>();
 
 // Identity configurations
 builder.Services.AddIdentity<User, IdentityRole<int>>(options => {
