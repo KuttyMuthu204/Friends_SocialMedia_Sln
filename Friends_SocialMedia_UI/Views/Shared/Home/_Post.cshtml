@@ -30,12 +30,12 @@
 <div class="bg-white rounded-xl shadow-sm text-sm font-medium border1">
     @* Post heading *@
     <div class="flex gap-3 sm:p-4 p-2.5 text-sm font-medium">
-        <a>
-            <img src="@(string.IsNullOrEmpty(Model.User.ProfilePictureUrl) ? Url.Content("~/images/avatar/user.png") : Model.User.ProfilePictureUrl)"
+        <a asp-controller="User" asp-action="Details" asp-route-userId="@Model.UserId">
+            <img src="@(string.IsNullOrEmpty(Model.User.ProfilePictureUrl) ? Url.Content("~/images/avatar/user.png") :  Url.Content(Model.User.ProfilePictureUrl))"
                 class="w-9 h-9 rounded-full" />
         </a>
         <div class="flex-1">
-            <a>
+            <a asp-controller="User" asp-action="Details" asp-route-userId="@Model.UserId">
                 <div class="text-black">@Model.User.FullName</div>
                 <div class="text-xs text-gray-500/80" title="@Model.DateCreated.ToString("MM/dd/yyyy HH:mm")">
                     @displayName</div>
@@ -45,7 +45,7 @@
             <div class="forms-container" style="display: flex; gap: 10px; align-items: center;">
                 @if (Model.UserId == userId)
                 {
-                    <form asp-asp-controller="Home" asp-action="TogglePostVisibility" method="post">
+                    <form asp-controller="Home" asp-action="TogglePostVisibility" method="post">
                         <input type="hidden" name="postId" value="@Model.Id" />
                         <button type="submit" class="hover:!bg-red-50 icon-link">
                             @if (isPrivate)
@@ -100,7 +100,7 @@
     @* Icons *@
     <div class="sm:p-4 p-2.5 flex items-center gap-4 text-xs font-semibold">
         <div class="flex items-center gap-2.5">
-            <form asp-asp-controller="Home" asp-action="TogglePostLike" method="post">
+            <form asp-controller="Home" asp-action="TogglePostLike" method="post">
                 <input type="hidden" name="postId" value="@Model.Id" />
                 <button type="submit" class="button-icon">
                     @if (isLiked)
@@ -169,19 +169,19 @@
                 <div class="flex items-start gap-3 relative">
                     @if (!string.IsNullOrEmpty(comment.User.ProfilePictureUrl))
                     {
-                        <a>
+                        <a asp-controller="User" asp-action="Details" asp-route-userId="@comment.UserId">
                             <img src="@Url.Content(comment.User.ProfilePictureUrl)" class="w-9 h-9 rounded-full" />
                         </a>
                     }
                     else
                     {
-                        <a>
+                        <a asp-controller="User" asp-action="Details" asp-route-userId="@comment.UserId">
                             <img src="~/images/avatar/user.png class=" w-9 h-9 rounded-full" />
                         </a>
                     }
                     <div class="flex-1">
                         <div class="flex justify-content-between">
-                            <a class="text-black font-medium inline-block flex-grow">
+                            <a asp-controller="User" asp-action="Details" asp-route-userId="@comment.UserId" class="text-black font-medium inline-block flex-grow">
                                 @comment.User.FullName
                             </a>
                             <small>@displayTime</small>
@@ -191,7 +191,7 @@
                                 @comment.Content
                             </p>
 
-                            <form asp-asp-controller="Home" asp-action="RemovePostComment">
+                            <form asp-controller="Home" asp-action="RemovePostComment">
                                 <input type="hidden" name="commentId" value="@comment.Id" />
                                 <button type="submit" class="text-xs ml-2" title="Remove post comment">
                                     <img src="~/images/icons/delete.png" class="w-5 h-5" />
@@ -209,17 +209,24 @@
                 </div>
             }
         </div>
+
+        @*Add Post Comment*@
         <form asp-controller="Home" asp-action="AddPostComment" method="post">
+
             <div class="sm:px-4 sm:py-3 p-2.5 border-t border-gray-100 flex items-center gap-1">
-                <img src="~/images/avatar/user.png" class="w-6 h-6 rounded-full" />
+            <a asp-controller="User" asp-action="Details" asp-route-userId="@Model.UserId">
+                    <img src="@(string.IsNullOrEmpty(Model.User.ProfilePictureUrl) ? Url.Content("~/images/avatar/user.png") : Url.Content(Model.User.ProfilePictureUrl))" class="w-6 h-6 rounded-full" />
+            </a>
                 <input type="hidden" name="postId" value="@Model.Id" />
                 <div class="flex-1 relative overflow-hidden h-10">
                     <textarea name="content" placeholder="Add Comment...." rows="1"
                         class="w-full resize-none bg-black-10 px-4 py-2 border border-gray-300"
                         style="border-radius:5px"></textarea>
                 </div>
+
                 <button type="submit" class="text-sm rounded-full py-1.5 px-3.5 bg-secondary">Comment</button>
             </div>
+
         </form>
     </div>
 </div>
