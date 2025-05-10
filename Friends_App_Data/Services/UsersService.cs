@@ -25,6 +25,21 @@ namespace Friends_App_Data.Services
                 .FirstOrDefaultAsync() ?? new User();
         }
 
+        public async Task<List<Post>> GetUserPosts(int userId)
+        {
+            var posts = await _context.Posts
+                               .Where(n => n.UserId == userId && n.Reports.Count < 5 && !n.IsDeleted)
+                               .Include(u => u.User)
+                               .Include(n => n.Likes)
+                               .Include(f => f.Favorites)
+                               .Include(n => n.Reports)
+                               .Include(n => n.Comments)
+                               .ThenInclude(n => n.User)
+                               .OrderByDescending(o => o.DateCreated).ToListAsync();
+
+            return posts;
+        }
+
         public async Task UpdateProfilePicture(int loggedInUserId, string profilePicUrl)
         {
             var user = await _context.Users.Where(u => u.Id == loggedInUserId)
