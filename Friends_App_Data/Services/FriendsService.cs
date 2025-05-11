@@ -90,5 +90,17 @@ namespace Friends_Data.Services
 
             return suggestedFriends;
         }
+
+        public async Task<List<FriendRequest>> GetSentFriendRequestAsync(int userId)
+        {
+            var friendRequestsSent = await _context.FriendRequests
+                .Include(n => n.Sender)
+                .Include(n => n.Receiver)
+                .Where(f => f.SenderId == userId && f.Status == FriendShipStatus.Pending)
+                .ToListAsync();
+
+            return friendRequestsSent;
+        }
+
     }
 }

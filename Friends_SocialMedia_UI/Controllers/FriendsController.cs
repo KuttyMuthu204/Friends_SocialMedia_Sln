@@ -1,5 +1,6 @@
 ﻿using Friends_Data.Services;
 using Friends_SocialMedia_UI.Controllers.Base;
+using Friends_UI.ViewModels.Friends;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Friends_UI.Controllers
@@ -13,8 +14,16 @@ namespace Friends_UI.Controllers
             _friendsService = friendsService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var userId = GetUserId();
+            if (!userId.HasValue) RedirectToLogin();
+
+            var friendsData = new FriendShipVM()
+            {
+                FriendRequests = await _friendsService.GetSentFriendRequestAsync(userId.Value),
+            };
+
             return View();
         }
 
