@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Azure.Core;
-using Friends_App_Data.Data;
+﻿using Friends_App_Data.Data;
+using Friends_App_Data.Data.Models;
 using Friends_Data.Data.Models;
 using Friends_Data.Helpers.Constants;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore;
 
 namespace Friends_Data.Services
 {
@@ -69,6 +64,26 @@ namespace Friends_Data.Services
                 _context.FriendShips.Remove(friendShip);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<List<User>> GetSuggestedFriendsAsync(int userId)
+        {
+            var existingFriends = await _context.FriendShips.Where(f => f.SenderId == userId || f.ReceiverId == userId)
+                .Select(f => f.SenderId == userId ? f.ReceiverId : f.SenderId)
+                .ToListAsync();
+
+            //pending requests
+            var pendingRequests = await _context.FriendRequests
+                .Where(r => (r.SenderId == userId || r.ReceiverId == userId) && r.Status == FriendShipStatus.Pending)
+                .Select(r => r.SenderId == userId ? r.ReceiverId : r.SenderId)
+                .ToListAsync();
+
+            //get suggested friends
+            var suggestedFriends = await _context.Users
+                .Where(n => n.Id != userId && !existingFriends.Contains(n.Id) && !pendingRequests.Contains(n.Id))
+                .Take(5).ToListAsync();
+
+            return suggestedFriends;
         }
     }
 }

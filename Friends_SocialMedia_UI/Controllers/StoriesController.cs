@@ -1,13 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Friends_App_Data.Data;
-using Friends_SocialMedia_UI.ViewModels.Stories;
-using Friends_App_Data.Data.Models;
+﻿using Friends_App_Data.Data.Models;
 using Friends_App_Data.Helpers.Enums;
-using Microsoft.EntityFrameworkCore;
 using Friends_App_Data.Services;
-using Microsoft.AspNetCore.Authorization;
 using Friends_SocialMedia_UI.Controllers.Base;
+using Friends_SocialMedia_UI.ViewModels.Stories;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Friends_SocialMedia_UI.Controllers
 {

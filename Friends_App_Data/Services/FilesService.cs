@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Friends_App_Data.Data.Models;
-using Friends_App_Data.Helpers.Enums;
+﻿using Friends_App_Data.Helpers.Enums;
 using Microsoft.AspNetCore.Http;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Friends_App_Data.Services
 {

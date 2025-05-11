@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using Friends_App_Data.Services;
+﻿using Friends_App_Data.Services;
 using Friends_SocialMedia_UI.Controllers.Base;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

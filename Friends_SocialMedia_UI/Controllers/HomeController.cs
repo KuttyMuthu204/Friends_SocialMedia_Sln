@@ -1,16 +1,10 @@
-using System.Reflection.Metadata.Ecma335;
-using System.Security.Claims;
-using Friends_App_Data.Data;
 using Friends_App_Data.Data.Models;
-using Friends_App_Data.Helpers;
 using Friends_App_Data.Helpers.Enums;
 using Friends_App_Data.Services;
 using Friends_SocialMedia_UI.Controllers.Base;
 using Friends_SocialMedia_UI.ViewModels.Home;
-using Friends_SocialMedia_UI.ViewModels.Stories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Friends_SocialMedia_UI.Controllers
 {

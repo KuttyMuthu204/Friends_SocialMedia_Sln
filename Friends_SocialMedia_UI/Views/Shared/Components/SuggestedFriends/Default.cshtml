@@ -1,86 +1,29 @@
-﻿﻿<div class="flex items-baseline justify-between text-black">
-    <div class="font-bold text-base"> People you may know </div>
+﻿@model List<User>
+
+﻿<div class="flex items-baseline justify-between text-black">
+	<div class="font-bold text-base"> People you may know </div>
 </div>
 
 <div class="side-list">
-    <div class="side-list-item">
-        <a asp-controller="User" asp-action="Details" asp-route-userId="1">
-            <img src="~/images/avatar/user.png" class="side-list-image rounded-full" />
-        </a>
-        <div class="flex-1">
-            <a>
-                <div class="side-list-title text-black">
-                    First User
-                </div>
-            </a>
-            <div class="side-list-info text-black">5 followers</div>
-        </div>
-        <form>
-            <button type="submit" class="button bg-primary-soft text-primary">Follow</button>
-        </form>
-    </div>
-    <div class="side-list-item">
-        <a>
-            <img src="~/images/avatar/user.png" class="side-list-image rounded-full" />
-        </a>
-        <div class="flex-1">
-            <a>
-                <div class="side-list-title text-black">
-                    Second User
-                </div>
-            </a>
-            <div class="side-list-info text-black">6 followers</div>
-        </div>
-        <form>
-            <button type="submit" class="button bg-primary-soft text-primary">Follow</button>
-        </form>
-    </div>
-    <div class="side-list-item">
-        <a>
-            <img src="~/images/avatar/user.png" class="side-list-image rounded-full" />
-        </a>
-        <div class="flex-1">
-            <a>
-                <div class="side-list-title text-black">
-                    Third User
-                </div>
-            </a>
-            <div class="side-list-info text-black">7 followers</div>
-        </div>
-        <form>
-            <button type="submit" class="button bg-primary-soft text-primary">Follow</button>
-        </form>
-    </div>
-    <div class="side-list-item">
-        <a>
-            <img src="~/images/avatar/user.png" class="side-list-image rounded-full" />
-        </a>
-        <div class="flex-1">
-            <a>
-                <div class="side-list-title text-black">
-                    Fourth User
-                </div>
-            </a>
-            <div class="side-list-info text-black">7 followers</div>
-        </div>
-        <form>
-            <button type="submit" class="button bg-primary-soft text-primary">Follow</button>
-        </form>
-    </div>
-    <div class="side-list-item">
-        <a>
-            <img src="~/images/avatar/user.png" class="side-list-image rounded-full" />
-        </a>
-        <div class="flex-1">
-            <a>
-                <div class="side-list-title text-black">
-                    Fifth User
-                </div>
-            </a>
-            <div class="side-list-info text-black">7 followers</div>
-        </div>
-        <form>
-            <button type="submit" class="button bg-primary-soft text-primary">Follow</button>
-        </form>
-    </div>
+	@foreach (var item in Model)
+	{
+		<div class="side-list-item">
+			<a asp-controller="User" asp-action="Details" asp-route-userId="@item.Id">
+				<img src="@(string.IsNullOrEmpty(item.ProfilePictureUrl) ?
+                                Url.Content("~/images/avatar/user.png") :
+                                Url.Content(item.ProfilePictureUrl))" class="side-list-image rounded-full" />
+			</a>
+			<div class="flex-1">
+				<a>
+					<div class="side-list-title text-black">
+						@item.FullName
+					</div>
+				</a>
+				<div class="side-list-info text-black">5 followers</div>
+			</div>
+			<form>
+				<button type="submit" class="button bg-primary-soft text-primary">Follow</button>
+			</form>
+		</div>
+	}
 </div>
