@@ -102,5 +102,15 @@ namespace Friends_Data.Services
             return friendRequestsSent;
         }
 
+        public async Task<List<FriendRequest>> GetReceivedFriendRequestAsync(int userId)
+        {
+            var friendRequestsReceived = await _context.FriendRequests
+                .Include(n => n.Sender)
+                .Include(n => n.Receiver)
+                .Where(f => f.ReceiverId == userId && f.Status == FriendShipStatus.Pending)
+                .ToListAsync();
+
+            return friendRequestsReceived;
+        }
     }
 }

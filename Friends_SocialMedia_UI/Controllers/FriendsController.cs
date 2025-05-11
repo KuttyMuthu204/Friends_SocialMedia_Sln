@@ -21,7 +21,8 @@ namespace Friends_UI.Controllers
 
             var friendsData = new FriendShipVM()
             {
-                FriendRequests = await _friendsService.GetSentFriendRequestAsync(userId.Value),
+                FriendRequestsSent = await _friendsService.GetSentFriendRequestAsync(userId.Value),
+                FriendRequestsReceived = await _friendsService.GetReceivedFriendRequestAsync(userId.Value)
             };
 
             return View(friendsData);

@@ -16,5 +16,6 @@ namespace Friends_Data.Services
         Task RemoveFriendAsync(int friendshipId);
         Task<List<UserWithFriendsCountDto>> GetSuggestedFriendsAsync(int userId);
         Task<List<FriendRequest>> GetSentFriendRequestAsync(int userId);
+        Task<List<FriendRequest>> GetReceivedFriendRequestAsync(int userId);
     }
 }
