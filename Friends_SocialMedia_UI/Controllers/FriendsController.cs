@@ -24,7 +24,7 @@ namespace Friends_UI.Controllers
                 FriendRequests = await _friendsService.GetSentFriendRequestAsync(userId.Value),
             };
 
-            return View();
+            return View(friendsData);
         }
 
         [HttpPost]
