@@ -1,6 +1,7 @@
 ﻿using Friends_App_Data.Data;
 using Friends_App_Data.Data.Models;
 using Friends_Data.Data.Models;
+using Friends_Data.Dtos;
 using Friends_Data.Helpers.Constants;
 using Microsoft.EntityFrameworkCore;
 
@@ -66,7 +67,7 @@ namespace Friends_Data.Services
             }
         }
 
-        public async Task<List<User>> GetSuggestedFriendsAsync(int userId)
+        public async Task<List<UserWithFriendsCountDto>> GetSuggestedFriendsAsync(int userId)
         {
             var existingFriends = await _context.FriendShips.Where(f => f.SenderId == userId || f.ReceiverId == userId)
                 .Select(f => f.SenderId == userId ? f.ReceiverId : f.SenderId)
@@ -81,7 +82,11 @@ namespace Friends_Data.Services
             //get suggested friends
             var suggestedFriends = await _context.Users
                 .Where(n => n.Id != userId && !existingFriends.Contains(n.Id) && !pendingRequests.Contains(n.Id))
-                .Take(5).ToListAsync();
+                .Select(n => new UserWithFriendsCountDto()
+                {
+                    User = n,
+                    FriendsCount = _context.FriendShips.Count(f => f.SenderId == n.Id || f.ReceiverId == n.Id)
+                }).Take(5).ToListAsync();
 
             return suggestedFriends;
         }
