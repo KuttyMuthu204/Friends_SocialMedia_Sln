@@ -9,7 +9,7 @@
 	@foreach (var item in Model)
 	{
 		<div class="side-list-item">
-			<a asp-controller="User" asp-action="Details" asp-route-userId="@item.UserId">
+			<a asp-controller="User" asp-action="Details" asp-route-userId="1">
 				<img src="@(string.IsNullOrEmpty(item.ProfilePictureUrl) ?
                                 Url.Content("~/images/avatar/user.png") :
                                 Url.Content(item.ProfilePictureUrl))" class="side-list-image rounded-full" />
@@ -22,7 +22,8 @@
 				</a>
 				<div class="side-list-info text-black">@item.FriendsCountDisplay</div>
 			</div>
-			<form>
+			<form asp-controller="Friends" asp-action="SendFriendRequest" method="post">
+				<input type="hidden" name="receiverId" value="@item.UserId" />
 				<button type="submit" class="button bg-primary-soft text-primary">Follow</button>
 			</form>
 		</div>
