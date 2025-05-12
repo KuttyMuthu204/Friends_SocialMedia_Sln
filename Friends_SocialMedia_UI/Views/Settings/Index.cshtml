@@ -3,7 +3,7 @@
 <main id="site__main" class="2xl:ml-[--w-side]  xl:ml-[--w-side-sm] p-2.5 h-[calc(100vh-var(--m-top))] mt-[--m-top]">
 
     <div class="max-w-3xl mx-auto">
-        <div class="box relative rounded-lg shadow-md">
+        <div class="box relative rounded-lg shadow-md" style="background-color:gainsboro">
 
             @* profile picture section *@
             <div class="flex items-center justify-between p-6 pb-4">
@@ -23,11 +23,10 @@
                         </label>
                     </div>
                     <div>
-                        <h3 class="text-base font-semibold text-black">@Model.FullName</h3>
-                        <p class="text-sm text-blue-600 mt-1 font-normal">@Model.UserName</p>
+                        <div class="text-base font-semibold text-black">@Model.FullName</div>
+                        <div class="text-sm text-blue-600 mt-1 font-normal">@Model.UserName</div>
                     </div>
-                    <button type="submit" id="saveButton" class="hidden button bg-blue-500 text-white px-4 py-1 rounded ml-auto">Save</button>
-
+                    <button type="submit" id="saveButton" class="hidden button px-4 py-1 rounded ml-auto" style="color:black; background-color:darkkhaki"><img src="~/images/icons/floppy-disk.png" class="w-4 h-4" />Save</button>
                 </form>
             </div>
 
@@ -36,11 +35,11 @@
                     <ul class="uk-slider-items w-[calc(100%+10px)] !overflow-hidden"
                         uk-switcher="connect: #setting_tab; animation: uk-animation-slide-right-medium, uk-animation-slide-left-medium">
                         <li class="w-auto pr-2.5">
-                            <a href="#">
+                            <a href="#" style="color:black">
                                 Update profile
                             </a>
                         </li>
-                        <li class="w-auto pr-2.5"><a href="#">Update password</a></li>
+                        <li class="w-auto pr-2.5"><a href="#" style="color:black">Update password</a></li>
                     </ul>
                 </nav>
             </div>
@@ -79,8 +78,8 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap-4 mt-16 pl-[10.5rem]">
-                                <button class="button px-6 bg-secondary">Cancel</button>
-                                <button type="submit" class="button px-10 bg-primary text-white">Save</button>
+                                <button class="button" style="color:black; background-color:lightcoral"><img src="~/images/icons/savecancel.png" class="w-5 h-5" />Cancel</button>
+                                <button type="submit" class="button" style="color:black; background-color:darkkhaki"><img src="~/images/icons/floppy-disk.png" class="w-4 h-4" />Save</button>
                             </div>
                         </div>
                     </form>
@@ -118,8 +117,8 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap-4 mt-16 pl-[10.5rem]">
-                                <button class="button px-6 bg-secondary">Cancel</button>
-                                <button type="submit" class="button px-10 bg-primary text-white">Save</button>
+                                <button class="button" style="color:black; background-color:lightcoral"><img src="~/images/icons/savecancel.png" class="w-5 h-5" />Cancel</button>
+                                <button type="submit" class="button" style="color:black; background-color:darkkhaki"><img src="~/images/icons/floppy-disk.png" class="w-4 h-4" />Save</button>
                             </div>
                         </div>
                     </form>
