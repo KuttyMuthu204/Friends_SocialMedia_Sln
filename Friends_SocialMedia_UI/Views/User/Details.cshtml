@@ -4,11 +4,11 @@
 <main id="site__main" class="2xl:ml-[--w-side]  xl:ml-[--w-side-sm] p-2.5 h-[calc(100vh-var(--m-top))] mt-[--m-top]">
 
     <div class="max-w-[1065px] mx-auto max-lg:-m-2.5">
-        <div class="bg-white shadow lg:rounded-b-xl lg:-mt-10">
+        <div class="bg-white shadow lg:rounded-b-xl">
             <div class="relative overflow-hidden w-full lg:h-8 h-8"></div>
-            <div class="p-3 flex flex-row items-center">
+            <div class="p-3 flex flex-row items-center" style="background-color:gainsboro; border-radius: 10px">
                 <div class="flex-shrink-0 mr-4">
-                    <div class="relative lg:h-28 lg:w-28 w-28 h-28">
+                    <div class="relative" style="width: 100px">
                         <div class="relative overflow-hidden md:border-[6px] border-gray-100 shrink-0">
                             <img src="@(string.IsNullOrEmpty(Model.User.ProfilePictureUrl) ?
                                 Url.Content("~/images/avatar/user.png") :
@@ -16,9 +16,9 @@
                         </div>
                     </div>
                 </div>
-                <div>
-                    <h3 class="md:text-3xl text-base font-bold text-black">@Model.User.FullName</h3>
-                    <p class="mt-2 text-gray-500">@Model.User.UserName</p>
+                <div style="margin: 5px">
+                    <div class="md:text-3xl text-base font-bold text-black">@Model.User.FullName</div>
+                    <div class="mt-2">@Model.User.UserName</div>
                 </div>
             </div>
         </div>
@@ -37,12 +37,12 @@
             <div class="lg:w-[400px]">
                 <div class="lg:space-y-4 lg:pb-8 max-lg:grid sm:grid-cols-2 max-lg:gap-6"
                      uk-sticky="media: 1024; end: #js-oversized; offset: 80">
-                    <div class="box p-5 px-6">
+                    <div class="box p-5 px-6" style="background-color: gainsboro;">
                         <div class="flex items-ce justify-between text-black">
 
                             <h3 class="font-bold text-lg">
-                                Friends
-                                <span class="block text-sm text-gray-500 mt-0. font-normal"> 20 friends </span>
+                                <span style="color:black">Friends</span>
+                                <span class="block text-sm text-gray-500 mt-0. font-normal" style="color:black"> 20 friends </span>
                             </h3>
 
                         </div>
