@@ -1,4 +1,5 @@
-﻿using Friends_Data.Services;
+﻿using Friends_Data.Helpers.Constants;
+using Friends_Data.Services;
 using Friends_SocialMedia_UI.Controllers.Base;
 using Friends_UI.ViewModels.Friends;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +37,13 @@ namespace Friends_UI.Controllers
 
             await _friendsService.SendRequestAsync(userId.Value, receiverId);
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CancelFriendRequest(int requestId)
+        {
+            await _friendsService.UpdateRequestAsync(requestId, FriendShipStatus.Cancelled);
+            return RedirectToAction("Index");
         }
     }
 }
