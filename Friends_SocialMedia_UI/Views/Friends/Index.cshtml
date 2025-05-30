@@ -35,7 +35,8 @@
 							</button>
 						</form>
 
-						<form>
+						<form asp-controller="Friends" asp-action="AcceptFriendRequest" method="post">
+							<input type="hidden" name="requestId" value="@request.Id" />
 							<button type="submit" class="button gap-1 max-md:hidden" style="color:black; background-color:darkkhaki">
 								<img src="~/images/icons/accept.png" class="w-5 h-5" /> Accept
 							</button>
