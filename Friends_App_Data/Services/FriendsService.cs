@@ -58,12 +58,23 @@ namespace Friends_Data.Services
 
         public async Task RemoveFriendAsync(int friendshipId)
         {
-            var friendShip = await _context.FriendShips.FindAsync(friendshipId);
+            var friendShip = await _context.FriendShips.FirstOrDefaultAsync(n => n.Id == friendshipId);
 
             if (friendShip != null)
             {
                 _context.FriendShips.Remove(friendShip);
                 await _context.SaveChangesAsync();
+
+                //friend requests
+                var requests = await _context.FriendRequests
+                    .Where(r => (r.SenderId == friendShip.SenderId && r.ReceiverId == friendShip.ReceiverId)
+                    || (r.SenderId == friendShip.ReceiverId && r.ReceiverId == friendShip.SenderId)).ToListAsync();
+
+                if (requests.Any())
+                {
+                    _context.FriendRequests.RemoveRange(requests);
+                    await _context.SaveChangesAsync();
+                }
             }
         }
 

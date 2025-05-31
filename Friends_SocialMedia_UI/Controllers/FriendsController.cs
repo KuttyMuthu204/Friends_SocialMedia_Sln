@@ -60,5 +60,12 @@ namespace Friends_UI.Controllers
             await _friendsService.UpdateRequestAsync(requestId, FriendShipStatus.Rejected);
             return RedirectToAction("Index");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveFriendRequest(int friendShipId)
+        {
+            await _friendsService.RemoveFriendAsync(friendShipId);
+            return RedirectToAction("Index");
+        }
     }
 }
