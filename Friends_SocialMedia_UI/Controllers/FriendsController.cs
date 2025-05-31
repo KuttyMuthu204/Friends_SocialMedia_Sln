@@ -22,6 +22,7 @@ namespace Friends_UI.Controllers
 
             var friendsData = new FriendShipVM()
             {
+                Friends = await _friendsService.GetFriendsAsync(userId.Value),
                 FriendRequestsSent = await _friendsService.GetSentFriendRequestAsync(userId.Value),
                 FriendRequestsReceived = await _friendsService.GetReceivedFriendRequestAsync(userId.Value)
             };
@@ -50,6 +51,13 @@ namespace Friends_UI.Controllers
         public async Task<IActionResult> AcceptFriendRequest(int requestId)
         {
             await _friendsService.UpdateRequestAsync(requestId, FriendShipStatus.Accepted);
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RejectFriendRequest(int requestId)
+        {
+            await _friendsService.UpdateRequestAsync(requestId, FriendShipStatus.Rejected);
             return RedirectToAction("Index");
         }
     }

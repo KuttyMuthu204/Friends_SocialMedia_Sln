@@ -112,5 +112,13 @@ namespace Friends_Data.Services
 
             return friendRequestsReceived;
         }
+
+        public async Task<List<FriendShip>> GetFriendsAsync(int userId)
+        {
+            var friends = await _context.FriendShips
+                         .Include(n => n.Sender).Include(n => n.Receiver).Where(n => n.SenderId == userId || n.ReceiverId == userId).ToListAsync();
+
+            return friends;
+        }
     }
 }
