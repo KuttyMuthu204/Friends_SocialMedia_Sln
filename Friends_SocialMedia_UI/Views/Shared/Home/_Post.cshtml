@@ -28,7 +28,7 @@
     bool showDetails = ViewData["ShowAllComments"] as bool? ?? false;
 }
 
-<div class="bg-white rounded-xl shadow-sm text-sm font-medium border1">
+<div id="post-@Model.Id" class="bg-white rounded-xl shadow-sm text-sm font-medium border1">
     @* Post heading *@
     <div class="flex gap-3 sm:p-4 p-2.5 text-sm font-medium">
         <a asp-controller="User" asp-action="Details" asp-route-userId="@Model.UserId">
@@ -102,8 +102,9 @@
     <div class="sm:p-4 p-2.5 flex items-center gap-4 text-xs font-semibold">
         <div class="flex items-center gap-2.5">
             <form asp-controller="Home" asp-action="TogglePostLike" method="post">
+               @Html.AntiForgeryToken()
                 <input type="hidden" name="postId" value="@Model.Id" />
-                <button type="submit" class="button-icon">
+                <button type="submit" class="button-icon like-button">
                     @if (isLiked)
                     {
                         <img src="~/images/icons/heart_red.png" class="text-lg w-5 h-5" title="like" />

@@ -24,19 +24,23 @@
 						</div>
 					</div>
 				</div>
-				@if (!Model.Any())
-				{
-					<div class="bg-white rounded-xl shadow-sm md:p-4 p-2 space-y-4 text-sm font-medium border1" style="width: 580px;">
-						Currently, there are no posts available. Would you like to create the first one?
-					</div>
-				}
-				else
-				{
-					@foreach (var post in Model)
+
+				<div id="posts-container" class="space-y-4">
+					@if (!Model.Any())
 					{
-						<partial name="Home/_Post" model="post" view-data='new ViewDataDictionary(ViewData) {{ "ShowAllComment", false}}' />
+						<div class="bg-white rounded-xl shadow-sm md:p-4 p-2 space-y-4 text-sm font-medium border1" style="width: 580px;">
+							Currently, there are no posts available. Would you like to create the first one?
+						</div>
 					}
-				}
+ 					else
+					{
+						@foreach (var post in Model)
+						{
+							<partial name="Home/_Post" model="post" view-data='new ViewDataDictionary(ViewData) { { "ShowAllComment", false } }' />
+						}
+					}
+				</div>
+	
 			</div>
 		</div>
 		<div class="flex-1">
@@ -61,4 +65,28 @@
 		document.getElementById('deletConfirmationPostId').value = postId;
 		UIkit.modal('#postDeleteDialog').show();
 	}
+
+	document.addEventListener('DOMContentLoaded', function() {
+		document.getElementById('posts-container').addEventListener('click', function() {
+			if(event.target.closest('.like-button'))
+			{
+				event.preventDefault();
+
+				var button = event.target.closest('.like-button');
+				var form = button.closest('form');
+				var postId = form.querySelector('input[name="postId"]').value;
+				var postContainer = document.getElementById('post-' + postId);
+
+				fetch(form.action, {
+					method: 'POST',
+					body: new FormData(form),
+					headers: {}
+				}).then(response => response.text())
+				  .then(html => {
+					  postContainer.innerHTML = html;
+				  })
+				  .catch(error => console.error('Error: ', error));
+			}
+		}) 
+	})
 </script>

@@ -63,13 +63,16 @@ namespace Friends_SocialMedia_UI.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> TogglePostLike(PostLikeVM postLikeVM)
         {
             var loggedInUserId = GetUserId();
             if (loggedInUserId == null) return RedirectToLogin();
 
             await _postService.TogglePostLikeAsync(postLikeVM.PostId, loggedInUserId.Value);
-            return RedirectToAction("Index");
+
+            var post = await _postService.GetPostByIdAsync(postLikeVM.PostId);
+            return PartialView("Home/_Post", post);
         }
 
         [HttpPost]
