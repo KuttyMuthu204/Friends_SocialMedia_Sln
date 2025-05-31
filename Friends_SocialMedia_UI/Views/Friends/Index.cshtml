@@ -1,125 +1,130 @@
-﻿@using Friends_UI.ViewModels.Friends
-@using System.Security.Claims
-@model FriendShipVM
+﻿@using System.Security.Claims; 
+@using Friends_Data.Helpers.Constants
+@using Friends_UI.ViewModels.Friends
+@model FriendShipVM;
 
 <main id="site__main" class="2xl:ml-[--w-side]  xl:ml-[--w-side-sm] p-2.5 h-[calc(100vh-var(--m-top))] mt-[--m-top]">
 
-	<div class="2xl:max-w-[1220px] max-w-[1065px] mx-auto">
+    <div class="2xl:max-w-[1220px] max-w-[1065px] mx-auto">
 
         @if (Model.Friends.Count > 0)
-		{
-			<div class="sm:my-6 my-3 flex items-center justify-between">
-				<div>
+        {
+            <div class="sm:my-6 my-3 flex items-center justify-between">
+                <div>
 					<div class="text-lg text-base font-semibold text-black">My Friends</div>
 					<div class="font-normal text-sm text-gray-500 leading-6">Your personal network of friends and acquaintances. Connect, share and stay in touch with the people who matter to you.</div>
-				</div>
-			</div>
+                </div>
+            </div>
 
-			<div class="grid grid-cols-2 gap-2">
-				@foreach (var request in Model.Friends)
-				{
-					var frined = (request.SenderId == int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier))) ? request.ReceiverId : request.SenderId;
+            <div class="grid grid-cols-2 gap-2">
+                @foreach (var _friendship in Model.Friends)
+                {
+                    var friend = _friendship.SenderId == int.Parse(User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier)) ?
+                _friendship.Receiver :
+                _friendship.Sender;
 
 					<div class="flex md:items-center space-x-4 p-4 rounded-md box" style="background-color: gainsboro">
 
-						<div class="w-14 h-14 flex-shrink-0 rounded-lg relative">
-							<img src="@(string.IsNullOrEmpty(request.Receiver.ProfilePictureUrl) ? Url.Content("~/images/avatar/user.png") :
-                     Url.Content(request.Receiver.ProfilePictureUrl))"
-								 class="absolute w-full h-full inset-0 rounded-md object-cover shadow-sm" />
-						</div>
+                        <div class="w-14 h-14 flex-shrink-0 rounded-lg relative">
+                            <img src="@(string.IsNullOrEmpty(friend.ProfilePictureUrl) ? Url.Content("~/images/avatar/user.png") :
+             Url.Content(friend.ProfilePictureUrl))"
+                                 class="absolute w-full h-full inset-0 rounded-md object-cover shadow-sm" />
+                        </div>
 
-						<div class="flex-1">
-							<a asp-controller="Users" asp-action="Details" asp-route-userId="@request.Receiver.Id" 
-							class="text-base font-semibold capitalize text-black">@request.Receiver.FullName</a>
-						</div>
+                        <div class="flex-1">
+                            <a asp-controller="Users" asp-action="Details" asp-route-userId="@friend.Id" class="text-base font-semibold capitalize text-black">@friend.FullName</a>
+                        </div>
 
-						<form asp-controller="Friends" asp-action="RemoveFriendRequest" method="post">
-							<input type="hidden" name="friendshipId" value="@request.Id" />
+					<form asp-controller="Friends" asp-action="RemoveFriendRequest" method="post">
+                            <input type="hidden" name="friendshipId" value="@_friendship.Id" />
 							<button type="submit" class="button gap-1 max-md:hidden" style="color:black; background-color:lightcoral">
-								<img src="~/images/icons/reject.png" class="w-5 h-5" /> Remove
-							</button>
-						</form>
-					</div>
-				}
-			</div>
-		}
+							<img src="~/images/icons/reject.png" class="w-5 h-5" /> Remove
+                            </button>
+                        </form>
+                    </div>
+                }
+            </div>
+        }
 
-		@if (Model.FriendRequestsReceived.Count > 0)
-		{
-			<div class="sm:my-6 my-3 flex items-center justify-between">
-				<div>
+        @if (Model.FriendRequestsReceived.Count > 0)
+        {
+            <div class="sm:my-6 my-3 flex items-center justify-between">
+                <div>
 					<div class="text-lg text-base font-semibold text-black">Received Requests</div>
 					<div class="font-normal text-sm text-gray-500 leading-6">See who wants to connect with you! Review and respond to incoming friend requests to expand your circle.</div>
-				</div>
-			</div>
+                </div>
+            </div>
 
-			<div class="grid grid-cols-2 gap-2">
-				@foreach (var request in Model.FriendRequestsReceived)
-				{
+            <div class="grid grid-cols-2 gap-2">
+                @foreach (var request in Model.FriendRequestsReceived)
+                {
 					<div class="flex md:items-center space-x-4 p-4 rounded-md box" style="background-color: gainsboro">
 
-						<div class="w-14 h-14 flex-shrink-0 rounded-lg relative">
-							<img src="@(string.IsNullOrEmpty(request.Sender.ProfilePictureUrl) ? Url.Content("~/images/avatar/user.png") :
+                        <div class="w-14 h-14 flex-shrink-0 rounded-lg relative">
+                            <img src="@(string.IsNullOrEmpty(request.Sender.ProfilePictureUrl) ? Url.Content("~/images/avatar/user.png") :
                      Url.Content(request.Sender.ProfilePictureUrl))"
-								 class="absolute w-full h-full inset-0 rounded-md object-cover shadow-sm" />
-						</div>
+                                 class="absolute w-full h-full inset-0 rounded-md object-cover shadow-sm" />
+                        </div>
 
-						<div class="flex-1">
-							<a asp-controller="Users" asp-action="Details" asp-route-userId="@request.Sender.Id" class="text-base font-semibold capitalize text-black">@request.Sender.FullName</a>
-						</div>
+                        <div class="flex-1">
+                            <a asp-controller="Users" asp-action="Details" asp-route-userId="@request.Sender.Id" class="text-base font-semibold capitalize text-black">@request.Sender.FullName</a>
+                        </div>
 
-						<form asp-controller="Friends" asp-action="RejectFriendRequest" method="post">
-						<input type="hidden" name="requestId" value="@request.Id" />
-							<button type="submit" class="button gap-1 max-md:hidden" style="color:black; background-color:lightcoral">
+                        <form asp-controller="Friends" asp-action="UpdateFriendRequest" method="post">
+                            <input type="hidden" name="requestId" value="@request.Id" />
+                            <input type="hidden" name="status" value="@FriendShipStatus.Rejected" />
+								<button type="submit" class="button gap-1 max-md:hidden" style="color:black; background-color:lightcoral">
 								<img src="~/images/icons/reject.png" class="w-5 h-5" /> Reject
 							</button>
-						</form>
+                        </form>
 
-						<form asp-controller="Friends" asp-action="AcceptFriendRequest" method="post">
-							<input type="hidden" name="requestId" value="@request.Id" />
-							<button type="submit" class="button gap-1 max-md:hidden" style="color:black; background-color:darkkhaki">
+                        <form asp-controller="Friends" asp-action="UpdateFriendRequest" method="post">
+                            <input type="hidden" name="requestId" value="@request.Id" />
+                            <input type="hidden" name="status" value="@FriendShipStatus.Accepted" />
+					<button type="submit" class="button gap-1 max-md:hidden" style="color:black; background-color:darkkhaki">
 								<img src="~/images/icons/accept.png" class="w-5 h-5" /> Accept
-							</button>
-						</form>
-					</div>
-				}
-			</div>
-		}
+                            </button>
+                        </form>
+                    </div>
+                }
+            </div>
+        }
 
 
-		@if (Model.FriendRequestsSent.Count > 0)
-		{
-			<div class="sm:my-6 my-3 flex items-center justify-between">
-				<div>
+        @if (Model.FriendRequestsSent.Count > 0)
+        {
+            <div class="sm:my-6 my-3 flex items-center justify-between">
+                <div>
 					<div class="text-lg text-base font-semibold text-black">Pending Invitations</div>
 					<div class="font-normal text-sm text-gray-500 leading-6">Track the friend requests you’ve sent. See who hasn’t responded yet and manage your pending invitations</div>
-				</div>
-			</div>
+                </div>
+            </div>
 
-			<div class="grid grid-cols-2 gap-2">
-				@foreach (var request in Model.FriendRequestsSent)
-				{
+            <div class="grid grid-cols-2 gap-2">
+                @foreach (var request in Model.FriendRequestsSent)
+                {
 					<div class="flex md:items-center space-x-4 p-4 rounded-md box" style="background-color:gainsboro">
 
-						<div class="w-14 h-14 flex-shrink-0 rounded-lg relative">
-							<img src="@(string.IsNullOrEmpty(request.Receiver.ProfilePictureUrl) ? Url.Content("~/images/avatar/user.png") :
+                        <div class="w-14 h-14 flex-shrink-0 rounded-lg relative">
+                            <img src="@(string.IsNullOrEmpty(request.Receiver.ProfilePictureUrl) ? Url.Content("~/images/avatar/user.png") :
                             Url.Content(request.Receiver.ProfilePictureUrl))"
-								 class="absolute w-full h-full inset-0 rounded-md object-cover shadow-sm" />
-						</div>
+                                 class="absolute w-full h-full inset-0 rounded-md object-cover shadow-sm" />
+                        </div>
 
-						<div class="flex-1">
-							<a asp-controller="Users" asp-action="Details" asp-route-userId="@request.Receiver.Id" class="text-base font-semibold capitalize text-black">@request.Receiver.FullName</a>
-						</div>
+                        <div class="flex-1">
+                            <a asp-controller="Users" asp-action="Details" asp-route-userId="@request.Receiver.Id" class="text-base font-semibold capitalize text-black">@request.Receiver.FullName</a>
+                        </div>
 
-						<form asp-controller="Friends" asp-action="CancelFriendRequest">
-							<input type="hidden" name="requestId" value="@request.Id" />
-							<button type="submit" class="button gap-1 max-md:hidden" style="color:black; background-color:lightcoral">
+                        <form asp-controller="Friends" asp-action="UpdateFriendRequest" method="post">
+                            <input type="hidden" name="requestId" value="@request.Id" />
+                            <input type="hidden" name="status" value="@FriendShipStatus.Cancelled" />
+                          	<button type="submit" class="button gap-1 max-md:hidden" style="color:black; background-color:lightcoral">
 								<img src="~/images/icons/reject.png" class="w-5 h-5" /> Cancel
 							</button>
-						</form>
-					</div>
-				}
-			</div>
-		}
-	</div>
+                        </form>
+                    </div>
+                }
+            </div>
+        }
+    </div>
 </main>
