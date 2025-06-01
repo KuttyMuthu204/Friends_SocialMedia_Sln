@@ -16,7 +16,7 @@ namespace Friends_Data.Services
             _context = context;
         }
 
-        public async Task UpdateRequestAsync(int requestId, string status)
+        public async Task<FriendRequest> UpdateRequestAsync(int requestId, string status)
         {
             var request = await _context.FriendRequests.FindAsync(requestId);
 
@@ -40,6 +40,7 @@ namespace Friends_Data.Services
             }
 
             await _context.SaveChangesAsync();
+            return request;
         }
 
         public async Task SendRequestAsync(int requestId, int receiverId)

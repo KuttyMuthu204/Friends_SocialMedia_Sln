@@ -25,7 +25,7 @@ namespace Friends_Data.Services
                 Message = GetPostMessage(notificationType, userFullName),
                 Type = notificationType,
                 IsRead = false,
-                PostId = postId,
+                PostId = postId.HasValue ? postId : null,
                 CreatedDate = DateTime.UtcNow,
                 UpdatedDate = DateTime.UtcNow
             };

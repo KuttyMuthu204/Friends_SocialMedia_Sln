@@ -18,13 +18,15 @@
         NotificationTypes.Favorite => "book-mark.png",
         NotificationTypes.Comment => "conversation.png",
         NotificationTypes.FriendRequestAccepted => "accept.png",
+        NotificationTypes.FriendRequestRejected => "reject.png",
+        NotificationTypes.FriendRequest => "add-user.png",
         _ => "notification.png"
     };
 
     <div class="relative flex items-center gap-3 p-2 duration-200 rounded-xl pr-10 hover:bg-secondery @(notification.IsRead ? "" : "bg-teal-500/5")"
-         onclick="setNotificationAsRead(@notification.Id)">
+         onclick="setNotificationAsRead(@notification.Id)" style="width:max-content">
         <div class="items-center gap-2 flex-1">
-            <img src="~/images/icons/@iconName" class="w-3 h-3 text-2xl" alt="@notification.Type" />
+            <img src="~/images/icons/@iconName" class="w-5 h-5 text-2xl" alt="@notification.Type" />
             <div>
                 <p>
                     @if (notification.IsRead)
@@ -39,15 +41,13 @@
                     }
                 </p>
                 <div class="text-xs text-gray-500 mt-1.5">@displayTxt</div>
+                @if (notification.IsRead == false)
+                {
+                    <div>
+                        <img src="~/images/icons/green-dot.png" class="w-2 h-2 absolute right-3 top-5" />
+                    </div>
+                }
             </div>
-
-            @if (notification.IsRead == false)
-            {
-                <div>
-                    <img src="~/images/icons/green-dot.png" class="w-3 h-3 absolute right-3 top-5" />
-                </div>
-            }
-
         </div>
     </div>
 }
