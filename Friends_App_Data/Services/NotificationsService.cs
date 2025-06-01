@@ -25,7 +25,7 @@ namespace Friends_Data.Services
                 Message = GetPostMessage(notificationType, userFullName),
                 Type = notificationType,
                 IsRead = false,
-                PostId = postId,    
+                PostId = postId,
                 CreatedDate = DateTime.UtcNow,
                 UpdatedDate = DateTime.UtcNow
             };
@@ -64,6 +64,13 @@ namespace Friends_Data.Services
         {
             return await _context.Notifications
                 .CountAsync(n => n.UserId == userId && !n.IsRead);
+        }
+
+        public async Task<List<Notification>> GetNotification(int userId)
+        {
+            return await _context.Notifications.Where(n => n.UserId == userId)
+                .OrderBy(n => n.IsRead)
+                .ThenByDescending(n => n.CreatedDate).ToListAsync();
         }
     }
 }

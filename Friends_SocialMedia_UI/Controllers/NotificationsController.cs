@@ -27,5 +27,14 @@ namespace Friends_UI.Controllers
             var count = await _notificationsService.GetUnReadNotificationCount(userId.Value);
             return Json(count);
         }
+
+        public async Task<IActionResult> GetNotifications()
+        {
+            var userId = GetUserId();
+            if (!userId.HasValue) RedirectToLogin();
+
+            var notifications = await _notificationsService.GetNotification(userId.Value);
+            return PartialView("Notifications/_Notifications", notifications);
+        }
     }
 }
