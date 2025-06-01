@@ -1,6 +1,7 @@
 using Friends_App_Data.Data.Models;
 using Friends_App_Data.Helpers.Enums;
 using Friends_App_Data.Services;
+using Friends_Data.Services;
 using Friends_SocialMedia_UI.Controllers.Base;
 using Friends_SocialMedia_UI.ViewModels.Home;
 using Friends_UI.Hubs;
@@ -17,13 +18,16 @@ namespace Friends_SocialMedia_UI.Controllers
         private readonly IHashtagService _hashtagService;
         private readonly IFilesService _fileService;
         private readonly IHubContext<NotificationHub> _hubContext;
+        private readonly INotificationsService _notificationsService;
 
-        public HomeController(IPostService postService, IHashtagService hashtagService, IFilesService filesService, IHubContext<NotificationHub> hubContext)
+        public HomeController(IPostService postService, IHashtagService hashtagService, 
+            IFilesService filesService, IHubContext<NotificationHub> hubContext, INotificationsService notificationsService)
         {
             _postService = postService;
             _hashtagService = hashtagService;
             _fileService = filesService;
             _hubContext = hubContext;
+            _notificationsService = notificationsService;
         }
 
         [HttpGet]
@@ -76,9 +80,9 @@ namespace Friends_SocialMedia_UI.Controllers
             await _postService.TogglePostLikeAsync(postLikeVM.PostId, loggedInUserId.Value);
 
             var post = await _postService.GetPostByIdAsync(postLikeVM.PostId);
+            var notificationNumber = await _notificationsService.GetUnReadNotificationCount(loggedInUserId.Value);
 
-            await _hubContext.Clients.User(post.UserId.ToString()).SendAsync("ReceiveNotification", "new");
-
+            await _hubContext.Clients.User(post.UserId.ToString()).SendAsync("ReceiveNotification", notificationNumber);
             return PartialView("Home/_Post", post);
         }
 
