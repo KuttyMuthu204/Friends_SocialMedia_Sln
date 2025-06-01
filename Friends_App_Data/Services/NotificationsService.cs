@@ -17,13 +17,15 @@ namespace Friends_Data.Services
             _hubContext = hubContext;
         }
 
-        public async Task AddNewNotificationAsync(int userId, string message, string notificationType)
+        public async Task AddNewNotificationAsync(int userId, string notificationType, string userFullName, int? postId)
         {
             var notification = new Notification()
             {
                 UserId = userId,
-                Message = message,
+                Message = GetPostMessage(notificationType, userFullName),
                 Type = notificationType,
+                IsRead = false,
+                PostId = postId,    
                 CreatedDate = DateTime.UtcNow,
                 UpdatedDate = DateTime.UtcNow
             };
@@ -33,6 +35,29 @@ namespace Friends_Data.Services
 
             var notificationNumber = await GetUnReadNotificationCount(userId);
             await _hubContext.Clients.User(userId.ToString()).SendAsync("ReceiveNotification", notificationNumber);
+        }
+
+        private string GetPostMessage(string notificationType, string userFullName)
+        {
+            var message = notificationType switch
+            {
+                "Like" => $"{userFullName} liked your post.",
+                "Comment" => $"{userFullName} commented on your post.",
+                "Favorite" => $"{userFullName} favorited your post.",
+                "Follow" => $"{userFullName} started following you.",
+                "Mention" => $"{userFullName} mentioned you in a post.",
+                "Share" => $"{userFullName} shared your post.",
+                "Report" => $"{userFullName} reported your post.",
+                "PostCreated" => $"{userFullName} created a new post.",
+                "PostUpdated" => $"{userFullName} updated a post.",
+                "PostDeleted" => $"{userFullName} deleted a post.",
+                "FriendRequest" => $"{userFullName} sent you a friend request.",
+                "FriendRequestAccepted" => $"{userFullName} accepted your friend request.",
+                "FriendRequestRejected" => $"{userFullName} rejected your friend request.",
+                _ => $"You have a new notification from {userFullName}."
+            };
+
+            return message;
         }
 
         public async Task<int> GetUnReadNotificationCount(int userId)

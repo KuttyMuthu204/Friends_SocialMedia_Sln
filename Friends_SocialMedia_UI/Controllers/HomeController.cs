@@ -70,13 +70,15 @@ namespace Friends_SocialMedia_UI.Controllers
         public async Task<IActionResult> TogglePostLike(PostLikeVM postLikeVM)
         {
             var loggedInUserId = GetUserId();
+            var loggedInUserFullName = GetUserFullName();
+
             if (loggedInUserId == null) return RedirectToLogin();
 
             var result =  await _postService.TogglePostLikeAsync(postLikeVM.PostId, loggedInUserId.Value);
 
             if (result.SendNotification)
             {
-                await _notificationsService.AddNewNotificationAsync(loggedInUserId.Value, "Liked", "Like");
+                await _notificationsService.AddNewNotificationAsync(loggedInUserId.Value, "Like", loggedInUserFullName,postLikeVM.PostId);
             }
 
             var post = await _postService.GetPostByIdAsync(postLikeVM.PostId);
