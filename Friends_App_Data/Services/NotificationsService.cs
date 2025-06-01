@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Friends_App_Data.Data;
 using Friends_Data.Data.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Friends_Data.Services
 {
@@ -30,6 +31,12 @@ namespace Friends_Data.Services
 
             await _context.Notifications.AddAsync(notification);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> GetUnReadNotificationCount(int userId)
+        {
+            return await _context.Notifications
+                .CountAsync(n => n.UserId == userId && !n.IsRead);
         }
     }
 }
