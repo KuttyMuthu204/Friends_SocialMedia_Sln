@@ -72,5 +72,18 @@ namespace Friends_Data.Services
                 .OrderBy(n => n.IsRead)
                 .ThenByDescending(n => n.CreatedDate).ToListAsync();
         }
+
+        public async Task SendNotificationReadAsync(int notificationId)
+        {
+            var notification = await _context.Notifications.FirstOrDefaultAsync(n => n.Id == notificationId);
+
+            if (notification != null)
+            {
+                notification.IsRead = true;
+                notification.UpdatedDate = DateTime.UtcNow;
+                _context.Notifications.Update(notification);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

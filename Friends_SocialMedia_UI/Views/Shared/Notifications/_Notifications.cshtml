@@ -1,25 +1,33 @@
 ﻿@model List<Notification>
 
-@foreach (var notification in Model)
+@foreach (var notification in @Model)
 {
     TimeSpan time = DateTime.UtcNow.Subtract(notification.CreatedDate);
-    string displayText = time switch
+    string displayTxt = time switch
     {
         var t when t.TotalDays >= 1 => $"{(int)t.TotalDays}d ago",
         var t when t.TotalHours >= 1 => $"{(int)t.TotalHours}h ago",
         var t when t.TotalMinutes >= 1 => $"{(int)t.TotalMinutes}m ago",
-        var t when t.TotalMinutes >= 1 => $"{(int)t.TotalMinutes}m ago",
         _ => "Just now"
     };
 
-    <div class="relative flex items-center gap-3 p-2 duration-200 rounded pr-10 hover:bg-secondery">
+    <div class="relative flex items-center gap-3 p-2 duration-200 rounded-xl pr-10 hover:bg-secondery @(notification.IsRead ? "" : "bg-teal-500/5")">
         <div class="flex-1">
             <p>
-                <b class="font-bold mr1">@notification.Message</b>
+                <b class="font-bold mr1">
+                    @notification.Message
+                </b>
             </p>
-            <div class="text-xs text-gray-500 mt-1.5">
-                @displayText
-            </div>
+            <div class="text-xs text-gray-500 mt-1.5">@displayTxt</div>
+
+            @if (notification.IsRead == false)
+            {
+@*                 <div class="w-2.5 h-2.5 bg-teal-600 rounded-full absolute right-3 top-5" onclick="setNotificationAsRead(@notification.Id)"></div> *@
+                <div onclick="setNotificationAsRead(@notification.Id)">
+                    <img src="~/images/icons/green-dot.png" class="w-3 h-3 absolute right-3 top-5" />
+                </div>
+            }
+
         </div>
     </div>
 }

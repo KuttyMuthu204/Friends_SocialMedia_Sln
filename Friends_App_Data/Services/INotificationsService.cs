@@ -12,5 +12,6 @@ namespace Friends_Data.Services
         Task AddNewNotificationAsync(int userId, string notificationType, string userFullName, int? postId);
         Task<int> GetUnReadNotificationCount(int userId);
         Task<List<Notification>> GetNotification(int userId);
+        Task SendNotificationReadAsync(int notificationId);
     }
 }
