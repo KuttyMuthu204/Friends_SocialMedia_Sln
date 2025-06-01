@@ -76,6 +76,7 @@ namespace Friends_SocialMedia_UI.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddPostComment(PostCommentVM postCommentVM)
         {
             var loggedInUserId = GetUserId();
@@ -92,7 +93,9 @@ namespace Friends_SocialMedia_UI.Controllers
             };
 
             await _postService.AddPostCommentAsync(newComment);
-            return RedirectToAction("Index");
+
+            var post = await _postService.GetPostByIdAsync(postCommentVM.PostId);
+            return PartialView("Home/_Post", post);
         }
 
         [HttpPost]
