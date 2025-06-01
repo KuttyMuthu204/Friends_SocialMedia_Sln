@@ -129,7 +129,7 @@
         <div class="flex items-center gap-2">
             <form asp-controller="Home" asp-action="TogglePostFavorite" method="post">
                 <input type="hidden" name="postId" value="@Model.Id" />
-                <button type="submit" class="button-icon ml-auto">
+                <button type="submit" class="button-icon ml-auto favorite-button">
                     @if (isFavorited)
                     {
                         <img src="~/images/icons/book-mark.png" class="text-lg w-5 h-5" title="favorite" />

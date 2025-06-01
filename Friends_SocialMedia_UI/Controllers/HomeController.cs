@@ -109,7 +109,9 @@ namespace Friends_SocialMedia_UI.Controllers
             if (loggedInUserId == null) return RedirectToLogin();
 
             await _postService.TogglePostFavoriteAsync(postFavoriteVM.PostId, loggedInUserId.Value);
-            return RedirectToAction("Index");
+
+            var post = await _postService.GetPostByIdAsync(postFavoriteVM.PostId);
+            return PartialView("Home/_Post", post);
         }
 
         [HttpPost]
