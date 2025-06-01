@@ -1,10 +1,12 @@
 using Friends_Data.Data.Models;
+using Friends_Data.Helpers.Constants;
 using Friends_Data.Helpers.Enums;
 using Friends_Data.Services;
 using Friends_SocialMedia_UI.Controllers.Base;
 using Friends_SocialMedia_UI.ViewModels.Home;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 
 namespace Friends_SocialMedia_UI.Controllers
 {
@@ -16,7 +18,7 @@ namespace Friends_SocialMedia_UI.Controllers
         private readonly IFilesService _fileService;
         private readonly INotificationsService _notificationsService;
 
-        public HomeController(IPostService postService, IHashtagService hashtagService, 
+        public HomeController(IPostService postService, IHashtagService hashtagService,
             IFilesService filesService, INotificationsService notificationsService)
         {
             _postService = postService;
@@ -70,18 +72,14 @@ namespace Friends_SocialMedia_UI.Controllers
         public async Task<IActionResult> TogglePostLike(PostLikeVM postLikeVM)
         {
             var loggedInUserId = GetUserId();
-            var loggedInUserFullName = GetUserFullName();
 
             if (loggedInUserId == null) return RedirectToLogin();
 
-            var result =  await _postService.TogglePostLikeAsync(postLikeVM.PostId, loggedInUserId.Value);
-
-            if (result.SendNotification)
-            {
-                await _notificationsService.AddNewNotificationAsync(loggedInUserId.Value, "Like", loggedInUserFullName,postLikeVM.PostId);
-            }
-
+            var result = await _postService.TogglePostLikeAsync(postLikeVM.PostId, loggedInUserId.Value);
             var post = await _postService.GetPostByIdAsync(postLikeVM.PostId);
+
+            if (result.SendNotification) await SendNotification(post.UserId, NotificationTypes.Like, postLikeVM.PostId);
+      
             return PartialView("Home/_Post", post);
         }
 
@@ -103,8 +101,9 @@ namespace Friends_SocialMedia_UI.Controllers
             };
 
             await _postService.AddPostCommentAsync(newComment);
-
             var post = await _postService.GetPostByIdAsync(postCommentVM.PostId);
+
+            await SendNotification(post.UserId, NotificationTypes.Comment, postCommentVM.PostId);
             return PartialView("Home/_Post", post);
         }
 
@@ -124,9 +123,10 @@ namespace Friends_SocialMedia_UI.Controllers
             var loggedInUserId = GetUserId();
             if (loggedInUserId == null) return RedirectToLogin();
 
-            await _postService.TogglePostFavoriteAsync(postFavoriteVM.PostId, loggedInUserId.Value);
-
+            var result = await _postService.TogglePostFavoriteAsync(postFavoriteVM.PostId, loggedInUserId.Value);
             var post = await _postService.GetPostByIdAsync(postFavoriteVM.PostId);
+
+            if (result.SendNotification) await SendNotification(post.UserId, NotificationTypes.Favorite, postFavoriteVM.PostId);
             return PartialView("Home/_Post", post);
         }
 
@@ -158,5 +158,10 @@ namespace Friends_SocialMedia_UI.Controllers
             return RedirectToAction("Index");
         }
 
+        public async Task SendNotification(int userId, string notificationType, int postId)
+        {
+            var userFullName = GetUserFullName();
+            await _notificationsService.AddNewNotificationAsync(userId, notificationType, userFullName, postId);
+        }
     }
 }

@@ -111,8 +111,14 @@ namespace Friends_Data.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task TogglePostFavoriteAsync(int postId, int userId)
+        public async Task<GetNotificationDto> TogglePostFavoriteAsync(int postId, int userId)
         {
+            var response = new GetNotificationDto()
+            {
+                SendNotification = false,
+                Success = false
+            };
+
             var favorites = await _context.Favorites.Where(l => l.PostId == postId && l.UserId == userId).FirstOrDefaultAsync();
 
             if (favorites != null)
@@ -131,7 +137,12 @@ namespace Friends_Data.Services
 
                 await _context.Favorites.AddAsync(newFavorite);
                 await _context.SaveChangesAsync();
+
+                response.SendNotification = true;
             }
+
+            response.Success = true;
+            return response;
         }
 
         public async Task<GetNotificationDto> TogglePostLikeAsync(int postId, int userId)
