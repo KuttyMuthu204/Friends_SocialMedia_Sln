@@ -1,6 +1,6 @@
-﻿using Friends_App_Data.Data.Models;
+﻿using Friends_Data.Data.Models;
 
-namespace Friends_App_Data.Services
+namespace Friends_Data.Services
 {
     public interface IUsersService
     {

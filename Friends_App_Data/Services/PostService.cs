@@ -1,9 +1,10 @@
-﻿using Friends_App_Data.Data;
-using Friends_App_Data.Data.Models;
+﻿using Friends_Data.Data;
+using Friends_Data.Data.Models;
+using Friends_Data.Dtos;
 using Friends_Data.Services;
 using Microsoft.EntityFrameworkCore;
 
-namespace Friends_App_Data.Services
+namespace Friends_Data.Services
 {
     public class PostService : IPostService
     {
@@ -133,8 +134,15 @@ namespace Friends_App_Data.Services
             }
         }
 
-        public async Task TogglePostLikeAsync(int postId, int userId)
+        public async Task<GetNotificationDto> TogglePostLikeAsync(int postId, int userId)
         {
+            var response = new GetNotificationDto()
+            {
+                SendNotification = false,
+                Success = false
+            };
+
+            //check if user has already liked the post
             var likes = await _context.Likes.Where(l => l.PostId == postId && l.UserId == userId).FirstOrDefaultAsync();
 
             if (likes != null)
@@ -153,9 +161,11 @@ namespace Friends_App_Data.Services
                 await _context.Likes.AddAsync(newLikes);
                 await _context.SaveChangesAsync();
 
-                //add notification to db
-                await _notificationsService.AddNewNotificationAsync(userId, "Someone liked your post", "Like");
+                response.SendNotification = true;
             }
+
+            response.Success = true;
+            return response;
         }
 
         public async Task TogglePostVisibilityAsync(int postId, int userId)

@@ -1,6 +1,6 @@
-﻿using Friends_App_Data.Data.Models;
-using Friends_App_Data.Helpers.Enums;
-using Friends_App_Data.Services;
+﻿using Friends_Data.Data.Models;
+using Friends_Data.Helpers.Enums;
+using Friends_Data.Services;
 using Friends_SocialMedia_UI.Controllers.Base;
 using Friends_SocialMedia_UI.ViewModels.Settings;
 using Microsoft.AspNetCore.Authorization;

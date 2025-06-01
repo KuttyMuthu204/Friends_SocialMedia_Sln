@@ -1,4 +1,4 @@
-﻿using Friends_App_Data.Services;
+﻿using Friends_Data.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Friends_SocialMedia_UI.ViewComponent

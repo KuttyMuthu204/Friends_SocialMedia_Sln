@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
-using Friends_App_Data.Data.Models;
-using Friends_App_Data.Helpers.Concerns;
-using Friends_App_Data.Helpers.Constants;
+using Friends_Data.Data.Models;
+using Friends_Data.Helpers.Concerns;
+using Friends_Data.Helpers.Constants;
 using Friends_SocialMedia_UI.ViewModels.Authentication;
 using Friends_SocialMedia_UI.ViewModels.Settings;
 using Microsoft.AspNetCore.Authorization;

@@ -1,8 +1,8 @@
-﻿using Friends_App_Data.Data;
-using Friends_App_Data.Data.Models;
+﻿using Friends_Data.Data;
+using Friends_Data.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Friends_App_Data.Services
+namespace Friends_Data.Services
 {
     public class UsersService : IUsersService
     {

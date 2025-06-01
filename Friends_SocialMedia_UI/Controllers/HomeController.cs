@@ -1,13 +1,10 @@
-using Friends_App_Data.Data.Models;
-using Friends_App_Data.Helpers.Enums;
-using Friends_App_Data.Services;
+using Friends_Data.Data.Models;
+using Friends_Data.Helpers.Enums;
 using Friends_Data.Services;
 using Friends_SocialMedia_UI.Controllers.Base;
 using Friends_SocialMedia_UI.ViewModels.Home;
-using Friends_UI.Hubs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 
 namespace Friends_SocialMedia_UI.Controllers
 {
@@ -17,16 +14,14 @@ namespace Friends_SocialMedia_UI.Controllers
         private readonly IPostService _postService;
         private readonly IHashtagService _hashtagService;
         private readonly IFilesService _fileService;
-        private readonly IHubContext<NotificationHub> _hubContext;
         private readonly INotificationsService _notificationsService;
 
         public HomeController(IPostService postService, IHashtagService hashtagService, 
-            IFilesService filesService, IHubContext<NotificationHub> hubContext, INotificationsService notificationsService)
+            IFilesService filesService, INotificationsService notificationsService)
         {
             _postService = postService;
             _hashtagService = hashtagService;
             _fileService = filesService;
-            _hubContext = hubContext;
             _notificationsService = notificationsService;
         }
 
@@ -77,12 +72,14 @@ namespace Friends_SocialMedia_UI.Controllers
             var loggedInUserId = GetUserId();
             if (loggedInUserId == null) return RedirectToLogin();
 
-            await _postService.TogglePostLikeAsync(postLikeVM.PostId, loggedInUserId.Value);
+            var result =  await _postService.TogglePostLikeAsync(postLikeVM.PostId, loggedInUserId.Value);
+
+            if (result.SendNotification)
+            {
+                await _notificationsService.AddNewNotificationAsync(loggedInUserId.Value, "Liked", "Like");
+            }
 
             var post = await _postService.GetPostByIdAsync(postLikeVM.PostId);
-            var notificationNumber = await _notificationsService.GetUnReadNotificationCount(loggedInUserId.Value);
-
-            await _hubContext.Clients.User(post.UserId.ToString()).SendAsync("ReceiveNotification", notificationNumber);
             return PartialView("Home/_Post", post);
         }
 

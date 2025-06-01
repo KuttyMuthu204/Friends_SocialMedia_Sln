@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Friends_Data.Data.Models;
 
 namespace Friends_Data.Dtos
 {
-    public class UserWithFriendsCountDto
+    public class GetNotificationDto
     {
-        public User User { get; set; }
-        public int FriendsCount { get; set; }
+        public bool Success { get; set; }
+        public bool SendNotification { get; set; }
     }
 }

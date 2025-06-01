@@ -1,7 +1,7 @@
-﻿using Friends_App_Data.Helpers.Enums;
+﻿using Friends_Data.Helpers.Enums;
 using Microsoft.AspNetCore.Http;
 
-namespace Friends_App_Data.Services
+namespace Friends_Data.Services
 {
     public class FilesService : IFilesService
     {

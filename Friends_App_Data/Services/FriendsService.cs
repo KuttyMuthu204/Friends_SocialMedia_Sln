@@ -1,5 +1,5 @@
-﻿using Friends_App_Data.Data;
-using Friends_App_Data.Data.Models;
+﻿using Friends_Data.Data;
+using Friends_Data.Data.Models;
 using Friends_Data.Data.Models;
 using Friends_Data.Dtos;
 using Friends_Data.Helpers.Constants;

@@ -1,12 +1,10 @@
-using Friends_App_Data.Data;
-using Friends_App_Data.Data.Models;
-using Friends_App_Data.Helpers;
-using Friends_App_Data.Services;
+using Friends_Data.Data;
+using Friends_Data.Data.Models;
+using Friends_Data.Helpers;
+using Friends_Data.Hubs;
 using Friends_Data.Services;
-using Friends_UI.Hubs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 

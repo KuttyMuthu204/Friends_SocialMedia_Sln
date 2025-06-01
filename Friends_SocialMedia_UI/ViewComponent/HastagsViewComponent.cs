@@ -1,4 +1,4 @@
-﻿using Friends_App_Data.Data;
+﻿using Friends_Data.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

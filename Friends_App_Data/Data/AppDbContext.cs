@@ -1,10 +1,10 @@
-﻿using Friends_App_Data.Data.Models;
+﻿using Friends_Data.Data.Models;
 using Friends_Data.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Friends_App_Data.Data
+namespace Friends_Data.Data
 {
     public class AppDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     {

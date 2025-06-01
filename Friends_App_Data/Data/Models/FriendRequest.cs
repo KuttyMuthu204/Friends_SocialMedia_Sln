@@ -1,4 +1,4 @@
-﻿using Friends_App_Data.Data.Models;
+﻿using Friends_Data.Data.Models;
 
 namespace Friends_Data.Data.Models
 {

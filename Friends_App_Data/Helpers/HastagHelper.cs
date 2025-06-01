@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Friends_App_Data.Helpers
+namespace Friends_Data.Helpers
 {
     public static class HastagHelper 
     {

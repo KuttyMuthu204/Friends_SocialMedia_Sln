@@ -1,8 +1,8 @@
-﻿using Friends_App_Data.Data.Models;
-using Friends_App_Data.Helpers.Concerns;
+﻿using Friends_Data.Data.Models;
+using Friends_Data.Helpers.Concerns;
 using Microsoft.AspNetCore.Identity;
 
-namespace Friends_App_Data.Helpers
+namespace Friends_Data.Helpers
 {
     public static class DbInitializer
     {

@@ -1,4 +1,4 @@
-﻿namespace Friends_App_Data.Helpers.Enums
+﻿namespace Friends_Data.Helpers.Enums
 {
     public enum ImageFileType
     {

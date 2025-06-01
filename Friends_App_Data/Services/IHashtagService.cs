@@ -1,4 +1,4 @@
-﻿namespace Friends_App_Data.Services
+﻿namespace Friends_Data.Services
 {
     public interface IHashtagService
     {

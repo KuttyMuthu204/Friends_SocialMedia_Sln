@@ -1,5 +1,5 @@
-﻿using Friends_App_Data.Data.Models;
-using Friends_App_Data.Services;
+﻿using Friends_Data.Data.Models;
+using Friends_Data.Services;
 using Friends_SocialMedia_UI.Controllers.Base;
 using Friends_UI.ViewModels.User;
 using Microsoft.AspNetCore.Identity;

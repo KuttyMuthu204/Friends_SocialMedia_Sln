@@ -1,4 +1,4 @@
-﻿namespace Friends_App_Data.Helpers.Concerns
+﻿namespace Friends_Data.Helpers.Concerns
 {
     public static class AppRole
     {

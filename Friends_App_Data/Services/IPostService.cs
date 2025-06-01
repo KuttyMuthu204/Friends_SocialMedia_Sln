@@ -1,6 +1,7 @@
-﻿using Friends_App_Data.Data.Models;
+﻿using Friends_Data.Data.Models;
+using Friends_Data.Dtos;
 
-namespace Friends_App_Data.Services
+namespace Friends_Data.Services
 {
     public interface IPostService
     {
@@ -13,7 +14,7 @@ namespace Friends_App_Data.Services
         Task AddPostCommentAsync(Comment comment);
         Task RemovePostCommentAsync(int commentId);
 
-        Task TogglePostLikeAsync(int postId, int userId);
+        Task<GetNotificationDto> TogglePostLikeAsync(int postId, int userId);
         Task TogglePostFavoriteAsync(int postId, int userId);
         Task TogglePostVisibilityAsync(int postId, int userId);
         Task<Post> GetPostByIdAsync(int postId); 

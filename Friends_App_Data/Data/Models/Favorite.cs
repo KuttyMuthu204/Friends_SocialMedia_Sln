@@ -1,4 +1,4 @@
-﻿namespace Friends_App_Data.Data.Models
+﻿namespace Friends_Data.Data.Models
 {
     public class Favorite
     {
