@@ -1,5 +1,6 @@
 ﻿using Friends_App_Data.Data;
 using Friends_App_Data.Data.Models;
+using Friends_Data.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Friends_App_Data.Services
@@ -8,11 +9,13 @@ namespace Friends_App_Data.Services
     {
         private readonly AppDbContext _context;
         private readonly IFilesService _filesService;
+        private readonly INotificationsService _notificationsService;
 
-        public PostService(AppDbContext context, IFilesService filesService)
+        public PostService(AppDbContext context, IFilesService filesService, INotificationsService notificationsService)
         {
             _context = context;
             _filesService = filesService;
+            _notificationsService = notificationsService;
         }
 
         public async Task<List<Post>> GetAllPostsAsync(int loggedInUserId)
@@ -149,6 +152,9 @@ namespace Friends_App_Data.Services
 
                 await _context.Likes.AddAsync(newLikes);
                 await _context.SaveChangesAsync();
+
+                //add notification to db
+                await _notificationsService.AddNewNotificationAsync(userId, "Someone liked your post", "Like");
             }
         }
 

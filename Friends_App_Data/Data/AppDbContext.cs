@@ -23,6 +23,7 @@ namespace Friends_App_Data.Data
         public DbSet<Hastag> Hastags { get; set; }
         public DbSet<FriendRequest> FriendRequests { get; set; }
         public DbSet<FriendShip> FriendShips { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

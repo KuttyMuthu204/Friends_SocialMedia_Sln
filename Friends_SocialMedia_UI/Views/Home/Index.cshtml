@@ -91,10 +91,10 @@
             }
         });
 
-              document.getElementById('posts-container').addEventListener('submit', function() {
-                  var form = event.target;
+        document.getElementById('posts-container').addEventListener('submit', function() {
+            var form = event.target;
 
-                  if(form.classList.contains('add-post-comment')){
+            if(form.classList.contains('add-post-comment')){
                       event.preventDefault();
 
                       var postId = form.querySelector('input[name="postId"]').value;
@@ -110,7 +110,26 @@
                               postContainer.innerHTML = html;
                         })
                         .catch(error => console.error('Error: ', error));
-                      }
-              });
+            }
+
+            if(form.classList.contains('remove-comment-form')){
+                    event.preventDefault();
+
+                      var postId = form.querySelector('input[name="postId"]').value;
+                      var commentId = form.querySelector('input[name="commentId"]').value;
+                      var postContainer = document.getElementById('post-' + postId);
+
+                        fetch(form.action, {
+                            method: 'POST',
+                            body: new FormData(form),
+                            headers: {}
+                        })
+                        .then(response => response.text())
+                        .then(html => {
+                              postContainer.innerHTML = html;
+                        })
+                        .catch(error => console.error('Error: ', error));
+            }
+        });
     })
 </script>

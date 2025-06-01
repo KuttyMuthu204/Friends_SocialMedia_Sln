@@ -3,8 +3,10 @@ using Friends_App_Data.Data.Models;
 using Friends_App_Data.Helpers;
 using Friends_App_Data.Services;
 using Friends_Data.Services;
+using Friends_UI.Hubs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +24,7 @@ builder.Services.AddScoped<IStoriesService, StoriesService>();
 builder.Services.AddScoped<IFilesService, FilesService>();
 builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<IFriendsService, FriendsService>();
+builder.Services.AddScoped<INotificationsService, NotificationsService>();
 
 // Identity configurations
 builder.Services.AddIdentity<User, IdentityRole<int>>(options => {
@@ -46,7 +49,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
-
+builder.Services.AddSignalR();
 var app = builder.Build();
 
 // Seed the database with Initial Data
@@ -79,5 +82,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapHub<NotificationHub>("/notificationHub");
 
 app.Run();

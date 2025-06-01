@@ -3,8 +3,10 @@ using Friends_App_Data.Helpers.Enums;
 using Friends_App_Data.Services;
 using Friends_SocialMedia_UI.Controllers.Base;
 using Friends_SocialMedia_UI.ViewModels.Home;
+using Friends_UI.Hubs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Friends_SocialMedia_UI.Controllers
 {
@@ -14,12 +16,14 @@ namespace Friends_SocialMedia_UI.Controllers
         private readonly IPostService _postService;
         private readonly IHashtagService _hashtagService;
         private readonly IFilesService _fileService;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        public HomeController(IPostService postService, IHashtagService hashtagService, IFilesService filesService)
+        public HomeController(IPostService postService, IHashtagService hashtagService, IFilesService filesService, IHubContext<NotificationHub> hubContext)
         {
             _postService = postService;
             _hashtagService = hashtagService;
             _fileService = filesService;
+            _hubContext = hubContext;
         }
 
         [HttpGet]
@@ -72,6 +76,9 @@ namespace Friends_SocialMedia_UI.Controllers
             await _postService.TogglePostLikeAsync(postLikeVM.PostId, loggedInUserId.Value);
 
             var post = await _postService.GetPostByIdAsync(postLikeVM.PostId);
+
+            await _hubContext.Clients.User(post.UserId.ToString()).SendAsync("ReceiveNotification", "new");
+
             return PartialView("Home/_Post", post);
         }
 
@@ -99,10 +106,13 @@ namespace Friends_SocialMedia_UI.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemovePostComment(RemoveCommentVM removeCommentVM)
         {
             await _postService.RemovePostCommentAsync(removeCommentVM.CommentId);
-            return RedirectToAction("Index");
+
+            var post = await _postService.GetPostByIdAsync(removeCommentVM.PostId);
+            return PartialView("Home/_Post", post);
         }
 
         [HttpPost]

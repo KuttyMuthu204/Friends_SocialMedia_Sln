@@ -33,7 +33,7 @@
 			<form id="search--box"
 				  class="xl:w-[680px] sm:w-96 sm:relative rounded-xl overflow-hidden z-20 max-md:hidden w-screen left-0 max-sm:fixed max-sm:top-2">
 				<img src="~/images/icons/loupe.png" name="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4">
-				<input type="text" name="query" placeholder="Search Posts, Friends..." class="w-full !pl-10 !font-normal h-12 !text-sm text-black" style="background-color: gainsboro;" />
+				<input type="text" name="query" placeholder="Search Posts, Friends..." class="w-full !pl-10 !font-normal h-12 !text-sm text-black" style="background-color: gray;" />
 			</form>
 		</div>
 
@@ -90,3 +90,24 @@
 		</div>
 	</div>
 </header>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aspnet-signalr/1.0.27/signalr.min.js" referrerpolicy="no-referrer"></script>
+<script>
+	document.addEventListener("DOMContentLoaded", () => {
+
+		//SignalR connection
+		const connection = new signalR.HubConnectionBuilder()
+		.withUrl("/notificationHub")
+		.build();
+
+        connection.on("ReceiveNotification", (message) => {
+			console.log("message ==> ", message);
+
+			document.getElementById("notificationsCount").innerHTML = "new";
+		});
+
+		connection.start()
+			.then(() => console.log("SignalR connection started"))
+			.catch((err) => console.log("SignalR connection error:", err));
+	});
+</script>
