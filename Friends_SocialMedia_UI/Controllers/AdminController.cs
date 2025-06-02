@@ -15,7 +15,8 @@ namespace Friends_UI.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var reportedPosts = _adminService.GetReportedPostsAsync();   
+            return View(reportedPosts);
         }
     }
 }

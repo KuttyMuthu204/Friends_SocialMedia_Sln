@@ -109,6 +109,14 @@ namespace Friends_Data.Services
 
             await _context.Reports.AddAsync(newReport);
             await _context.SaveChangesAsync();
+
+            var post = await _context.Posts.FirstOrDefaultAsync(p => p.Id == postId);
+            if (post != null)
+            {
+                post.NoOfReports += 1;
+                _context.Posts.Update(post);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task<GetNotificationDto> TogglePostFavoriteAsync(int postId, int userId)
