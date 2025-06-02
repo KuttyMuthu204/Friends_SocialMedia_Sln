@@ -6,7 +6,6 @@ using Friends_SocialMedia_UI.Controllers.Base;
 using Friends_SocialMedia_UI.ViewModels.Home;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
 
 namespace Friends_SocialMedia_UI.Controllers
 {
@@ -78,7 +77,7 @@ namespace Friends_SocialMedia_UI.Controllers
             var result = await _postService.TogglePostLikeAsync(postLikeVM.PostId, loggedInUserId.Value);
             var post = await _postService.GetPostByIdAsync(postLikeVM.PostId);
 
-            if (result.SendNotification) await SendNotification(post.UserId, NotificationTypes.Like, postLikeVM.PostId);
+            if (result.SendNotification && loggedInUserId != post.UserId) await SendNotification(post.UserId, NotificationTypes.Like, postLikeVM.PostId);
       
             return PartialView("Home/_Post", post);
         }
@@ -103,7 +102,11 @@ namespace Friends_SocialMedia_UI.Controllers
             await _postService.AddPostCommentAsync(newComment);
             var post = await _postService.GetPostByIdAsync(postCommentVM.PostId);
 
-            await SendNotification(post.UserId, NotificationTypes.Comment, postCommentVM.PostId);
+            if (loggedInUserId != post.UserId)
+            {
+                await SendNotification(post.UserId, NotificationTypes.Comment, postCommentVM.PostId);
+            }
+
             return PartialView("Home/_Post", post);
         }
 
@@ -126,7 +129,7 @@ namespace Friends_SocialMedia_UI.Controllers
             var result = await _postService.TogglePostFavoriteAsync(postFavoriteVM.PostId, loggedInUserId.Value);
             var post = await _postService.GetPostByIdAsync(postFavoriteVM.PostId);
 
-            if (result.SendNotification) await SendNotification(post.UserId, NotificationTypes.Favorite, postFavoriteVM.PostId);
+            if (result.SendNotification && loggedInUserId != post.UserId) await SendNotification(post.UserId, NotificationTypes.Favorite, postFavoriteVM.PostId);
             return PartialView("Home/_Post", post);
         }
 

@@ -23,22 +23,32 @@
         _ => "notification.png"
     };
 
+    string redirectionUrl = notification.Type switch
+    {
+        NotificationTypes.FriendRequestAccepted => Url.Action("Index", "Friends"),
+        NotificationTypes.FriendRequestRejected => Url.Action("Index", "Friends"),
+        NotificationTypes.FriendRequest => Url.Action("Index", "Friends"),
+        _ => Url.Action("GetPosById", "Home", new { postId = notification.PostId })
+    };
+     
     <div class="relative flex items-center gap-3 p-2 duration-200 rounded-xl pr-10 hover:bg-secondery @(notification.IsRead ? "" : "bg-teal-500/5")"
          onclick="setNotificationAsRead(@notification.Id)" style="width:max-content">
         <div class="items-center gap-2 flex-1">
             <img src="~/images/icons/@iconName" class="w-5 h-5 text-2xl" alt="@notification.Type" />
             <div>
                 <p>
-                    @if (notification.IsRead)
-                    {
-                        @notification.Message
-                    }
-                    else
-                    {
-                        <b class="font-bold mr1">
+                    <a href="@redirectionUrl">
+                        @if (notification.IsRead)
+                        {
                             @notification.Message
-                        </b>
-                    }
+                        }
+                        else
+                        {
+                            <b class="font-bold mr1">
+                                @notification.Message
+                            </b>
+                        }
+                    </a>
                 </p>
                 <div class="text-xs text-gray-500 mt-1.5">@displayTxt</div>
                 @if (notification.IsRead == false)
