@@ -21,7 +21,7 @@ namespace Friends_Data.Services
         public async Task<List<Post>> GetReportedPostsAsync()
         {
             return await _context.Posts
-                .Include(p => p.Reports)
+                .Include(p => p.User)
                 .Where(p => p.NoOfReports > 5 && !p.IsDeleted).ToListAsync();
         }
     }

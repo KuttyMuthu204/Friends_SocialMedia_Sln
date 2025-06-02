@@ -13,10 +13,11 @@ namespace Friends_UI.Controllers
             _adminService = adminService;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> GetReportedPosts()
         {
-            var reportedPosts = _adminService.GetReportedPostsAsync();   
-            return View(reportedPosts);
+            var reportedPosts = await _adminService.GetReportedPostsAsync();   
+            return View("Index", reportedPosts);
         }
     }
 }
