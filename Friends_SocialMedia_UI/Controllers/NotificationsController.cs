@@ -1,10 +1,13 @@
 ﻿using Friends_Data.Data.Models;
+using Friends_Data.Helpers.Concerns;
 using Friends_Data.Services;
 using Friends_SocialMedia_UI.Controllers.Base;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Friends_UI.Controllers
 {
+    [Authorize(Roles = AppRole.User)]
     public class NotificationsController : BaseController
     {
         private readonly INotificationsService _notificationsService;

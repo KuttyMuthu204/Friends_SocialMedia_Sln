@@ -1,0 +1,66 @@
+﻿@using System.Security.Claims
+@using Friends_Data.Data.Models
+@using Friends_Data.Helpers.Constants
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<User> userManager;
+
+@{
+    var loggedInUser = await userManager.GetUserAsync(User);
+    var userName = loggedInUser?.UserName;
+    var fullName = loggedInUser?.FullName;
+    var profilePicUrl = loggedInUser?.ProfilePictureUrl;
+}
+
+<header class="z-[100] h-[--m-top] fixed top-0 left-0 w-full flex items-center bg-white/80 sky-50 backdrop-blur-xl border-b border-slate-200">
+    <div class="2xl:w-[--w-side] lg:w-[--w-side-sm]">
+        <div class="flex items-center gap-1">
+            <button uk-toggle="target: #site__sidebar ; cls :!-translate-x-0"
+                    class="flex items-center justify-center w-6 h-6 text-xl rounded-full hover:bg-gray-100 xl:hidden group" style="margin-left:10px">
+                <img src="~/images/icons/line.png" name="menu-outline" class="text-2xl group-aria-expanded:hidden" />
+                <img src="~/images/icons/cross-rounded-outline.png" name="close-outline" class="hidden text-2xl group-aria-expanded:block" />
+            </button>
+
+            <div id="logo" class="flex items-center ml-4">
+                <a asp-controller="Home" asp-action="Index" class="flex items-center">
+                    <img src="~/images/logo/letter-f.png" class="w-10 md:block hidden" /><br />
+                    <span class="ml-2 text-black">Friends - Admin</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex-1 relative justify-center">
+        <div class="max-w-[1220px] mx-auto flex items-center">
+            <div class="flex items-center sm:gap-4 gap-2 absolute right-5 top-1/2 -translate-y-1/2 text-black">
+                <div class="rounded-full relative bg-secondery cursor-pointer shrink-0">
+                    <img src="@(Url.Content(profilePicUrl) ?? Url.Content("~/images/avatar/user.png"))" class="sm:w-9 sm:h-9 w-7 h-7 rounded-full shadow shrink-0" />
+                </div>
+                <div class="hidden bg-white rounded-lg drop-shadow-xl w-64 border2" uk-drop="offset:6;pos: bottom-right;animate-out: true;">
+                    <a>
+                        <div class="p-4 py-5 flex items-center gap-4">
+                            <img src="@(Url.Content(profilePicUrl) ?? Url.Content("~/images/avatar/user.png"))" class="w-10 h-10 rounded-full shadow" />
+                            <div class="flex-1">
+                                <div class="text-sm mt-1 text-black font-light/70">@fullName</div>
+                                <div class="text-sm mt-1 text-black font-light/70">@userName</div>
+                            </div>
+                        </div>
+                    </a>
+                    <hr />
+                    <nav>
+                        <a asp-controller="Settings" asp-action="Index">
+                            <div class="flex items-center gap-2.5 hover:bg-secondery p-2 px-2.5 rounded-md">
+                                <img src="~/images/icons/setting.png" class="text-lg h-5 w-5"> my account
+                            </div>
+                        </a>
+                        <hr />
+                        <a asp-controller="Authentication" asp-action="Logout">
+                            <div class="flex items-center gap-2.5 hover:bg-secondery p-2 px-2.5 rounded-md">
+                                <img src="~/images/icons/exit.png" class="text-lg h-5 w-5"> log out
+                            </div>
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

@@ -1,9 +1,12 @@
-﻿using Friends_Data.Services;
+﻿using Friends_Data.Helpers.Concerns;
+using Friends_Data.Services;
 using Friends_SocialMedia_UI.Controllers.Base;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Friends_UI.Controllers
 {
+    [Authorize(Roles = AppRole.Admin)]
     public class AdminController : BaseController
     {
         private readonly IAdminService _adminService;

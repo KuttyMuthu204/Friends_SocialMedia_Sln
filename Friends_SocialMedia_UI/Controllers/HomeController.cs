@@ -1,4 +1,5 @@
 using Friends_Data.Data.Models;
+using Friends_Data.Helpers.Concerns;
 using Friends_Data.Helpers.Constants;
 using Friends_Data.Helpers.Enums;
 using Friends_Data.Services;
@@ -9,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Friends_SocialMedia_UI.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = AppRole.User)]
     public class HomeController : BaseController
     {
         private readonly IPostService _postService;

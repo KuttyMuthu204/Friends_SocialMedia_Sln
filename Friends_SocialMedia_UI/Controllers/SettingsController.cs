@@ -1,4 +1,5 @@
 ﻿using Friends_Data.Data.Models;
+using Friends_Data.Helpers.Concerns;
 using Friends_Data.Helpers.Enums;
 using Friends_Data.Services;
 using Friends_SocialMedia_UI.Controllers.Base;
@@ -9,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Friends_SocialMedia_UI.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = $"{AppRole.User},{AppRole.Admin}")]
     public class SettingsController : BaseController
     {
         private readonly IUsersService _usersService;

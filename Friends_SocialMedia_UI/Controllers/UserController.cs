@@ -1,12 +1,15 @@
 ﻿using Friends_Data.Data.Models;
+using Friends_Data.Helpers.Concerns;
 using Friends_Data.Services;
 using Friends_SocialMedia_UI.Controllers.Base;
 using Friends_UI.ViewModels.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Friends_UI.Controllers
 {
+    [Authorize(Roles = AppRole.User)]
     public class UserController : BaseController
     {
         private readonly IUsersService _usersService;

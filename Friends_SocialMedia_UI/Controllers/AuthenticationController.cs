@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Data;
+using System.Security.Claims;
 using Friends_Data.Data.Models;
 using Friends_Data.Helpers.Concerns;
 using Friends_Data.Helpers.Constants;
@@ -53,7 +54,14 @@ namespace Friends_SocialMedia_UI.Controllers
 
             if (result.Succeeded)
             {
-                return RedirectToAction("Index", "Home");
+                if (User.IsInRole(AppRole.Admin))
+                {
+                    return RedirectToAction("Index", "Admin");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
             }
             else
             {

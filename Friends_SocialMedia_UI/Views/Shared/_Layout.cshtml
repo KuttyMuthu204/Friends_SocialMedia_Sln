@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Friends_Data.Helpers.Concerns
+<!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
@@ -14,13 +15,15 @@
 
 		@if (User.Identity.IsAuthenticated)
 		{
-			@* Topbar *@
-			<partial name="Navigation/_TopBar" /> 
-
-			@* Side bar (left) *@
-			<partial name="Navigation/_SideBar" />
-
-			@* Home *@
+            @if (User.IsInRole(AppRole.User))
+            {
+				<partial name="Navigation/_TopBar" />
+				<partial name="Navigation/_SideBar" />
+			}
+			else if (User.IsInRole(AppRole.Admin))
+			{
+				<partial name="Navigation/_TopBarAdmin" />
+			}
 		}
 		@RenderBody()
 	</div>
