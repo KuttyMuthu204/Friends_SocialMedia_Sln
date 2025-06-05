@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Friends_UI.Controllers
 {
-    [Authorize(Roles = AppRole.Admin)]
     public class AdminController : BaseController
     {
         private readonly IAdminService _adminService;

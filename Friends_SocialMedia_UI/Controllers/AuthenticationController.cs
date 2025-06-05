@@ -54,9 +54,10 @@ namespace Friends_SocialMedia_UI.Controllers
 
             if (result.Succeeded)
             {
-                if (User.IsInRole(AppRole.Admin))
+                if (loginVM.Email.Contains("admin"))
                 {
-                    return RedirectToAction("Index", "Admin");
+                    await _userManager.AddToRoleAsync(loggedInUser, AppRole.Admin);
+                    return RedirectToAction("GetReportedPosts", "Admin");
                 }
                 else
                 {
