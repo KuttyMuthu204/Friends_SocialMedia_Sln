@@ -1,6 +1,7 @@
 ﻿using Friends_Data.Data;
 using Friends_Data.Data.Models;
 using Friends_Data.Dtos;
+using Friends_Data.Migrations;
 using Friends_Data.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -204,6 +205,29 @@ namespace Friends_Data.Services
         {
             await _context.Comments.AddAsync(comment);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task ApproveReportedPost(int postId)
+        {
+            var post = await GetPostByIdAsync(postId);
+
+            if (post != null)
+            {
+                _context.Posts.Remove(post);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task CancelReportedPost(int postId)
+        {
+            var post = await GetPostByIdAsync(postId);
+
+            if (post != null)
+            {
+                post.NoOfReports = 0;
+                _context.Posts.Update(post);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

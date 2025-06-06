@@ -54,7 +54,7 @@ namespace Friends_SocialMedia_UI.Controllers
 
             if (result.Succeeded)
             {
-                if (loginVM.Email.Contains("admin"))
+                if (loginVM.Email == "admin.friends@gmail.com")
                 {
                     await _userManager.AddToRoleAsync(loggedInUser, AppRole.Admin);
                     return RedirectToAction("GetReportedPosts", "Admin");

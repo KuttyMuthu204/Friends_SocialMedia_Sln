@@ -52,15 +52,15 @@ builder.Services.AddSignalR();
 var app = builder.Build();
 
 // Seed the database with Initial Data
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await dbContext.Database.MigrateAsync();
+//using (var scope = app.Services.CreateScope())
+//{
+//    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+//    await dbContext.Database.MigrateAsync();
 
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
-    await DbInitializer.SeedUsersAsync(userManager, roleManager);
-}
+//    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+//    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+//    await DbInitializer.SeedUsersAsync(userManager, roleManager);
+//}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

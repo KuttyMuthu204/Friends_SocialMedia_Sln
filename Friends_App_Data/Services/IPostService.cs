@@ -17,6 +17,8 @@ namespace Friends_Data.Services
         Task<GetNotificationDto> TogglePostLikeAsync(int postId, int userId);
         Task<GetNotificationDto> TogglePostFavoriteAsync(int postId, int userId);
         Task TogglePostVisibilityAsync(int postId, int userId);
-        Task<Post> GetPostByIdAsync(int postId); 
+        Task<Post> GetPostByIdAsync(int postId);
+        Task ApproveReportedPost(int postId);
+        Task CancelReportedPost(int postId);
     }
 }
