@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Friends_SocialMedia_UI.Controllers
 {
+
     public class AuthenticationController : Controller
     {
         private readonly UserManager<User> _userManager;

@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 // DB Connection
-var dbConnection = builder.Configuration.GetConnectionString("FriendsConnection");
+var dbConnection = builder.Configuration.GetConnectionString("FriendsConnectionAzureDB");
 var blobConnection = builder.Configuration["AzureStorageConnectionString"];
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(dbConnection));
 
@@ -53,15 +53,15 @@ builder.Services.AddSignalR();
 var app = builder.Build();
 
 // Seed the database with Initial Data
-//using (var scope = app.Services.CreateScope())
-//{
-//    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-//    await dbContext.Database.MigrateAsync();
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await dbContext.Database.MigrateAsync();
 
-//    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
-//    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
-//    await DbInitializer.SeedUsersAsync(userManager, roleManager);
-//}
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+    await DbInitializer.SeedUsersAsync(userManager, roleManager);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -81,7 +81,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Authentication}/{action=Login}/{id?}");
 
 app.MapHub<NotificationHub>("/notificationHub");
 
